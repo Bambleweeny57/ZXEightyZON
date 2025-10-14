@@ -50,6 +50,107 @@ This project is currently in development. Stay tuned for schematics, build logs,
 | 17  | CLK_OUT  | Output    | Pass-through clock to YM2149        | ÷2 clock output to AY              |
 | 18  | NC       | —         | Not connected                       | Not connected                      |
 | 19  | NC       | —         | Not connected                       | Not connected                      |
-| 20  | VCC      | —         | +5V power                           | +5V power                          |
+| 20  | VCC      | —         | +5V power                           | +5V 
 
+---
+## GAL16V8 CUPL Code — ZXEightyZON
+
+### YM2149 Configuration
+
+```cupl
+Name     ZXEightyZON_YM2149;
+PartNo   001;
+Date     2025-10-14;
+Revision Rev1.2;
+Designer Jonathan Gratton;
+Company  RetroCore;
+Device   g16v8;
+
+PIN 1   = CLK_IN;     /* System clock from ZX81 */
+PIN 2   = A0;
+PIN 3   = A1;
+PIN 4   = A2;
+PIN 5   = A3;
+PIN 6   = A4;
+PIN 7   = A5;
+PIN 8   = A6;
+PIN 9   = A7;
+PIN 10  = GND;
+PIN 11  = WR_N;
+PIN 12  = IORQ_N;
+PIN 13  = RD_N;
+PIN 14  = BDIR;
+PIN 15  = BC1;
+PIN 16  = SEL;
+PIN 17  = CLK_OUT;
+PIN 18  = NC;
+PIN 19  = NC;
+PIN 20  = VCC;
+
+FIELD Addr = [A7..A0];
+
+EQU valid_io =
+    !IORQ_N &
+    (
+      (Addr & 0xDF == 0x0F) #
+      (Addr & 0xCF == 0x1F) #
+      (Addr & 0xCF == 0x0F) #
+      (Addr & 0xDF == 0x1F)
+    );
+
+BDIR     = !WR_N & valid_io;
+BC1      = (!WR_N # !RD_N) & valid_io;
+SEL      = 0;
+CLK_OUT  = CLK_IN;
+
+```
+### AY-3-8912 Configuration 
+
+```cupl
+Name     ZXEightyZON_AY8912;
+PartNo   002;
+Date     2025-10-14;
+Revision Rev1.2;
+Designer Jonathan Gratton;
+Company  RetroCore;
+Device   g16v8;
+
+PIN 1   = CLK_IN;     /* System clock from ZX81 */
+PIN 2   = A0;
+PIN 3   = A1;
+PIN 4   = A2;
+PIN 5   = A3;
+PIN 6   = A4;
+PIN 7   = A5;
+PIN 8   = A6;
+PIN 9   = A7;
+PIN 10  = GND;
+PIN 11  = WR_N;
+PIN 12  = IORQ_N;
+PIN 13  = RD_N;
+PIN 14  = BDIR;
+PIN 15  = BC1;
+PIN 16  = SEL;        /* Unused by AY, but set to 0 */
+PIN 17  = CLK_OUT;    /* ÷2 clock output for AY */
+PIN 18  = NC;
+PIN 19  = NC;
+PIN 20  = VCC;
+
+FIELD Addr = [A7..A0];
+
+EQU valid_io =
+    !IORQ_N &
+    (
+      (Addr & 0xDF == 0x0F) #
+      (Addr & 0xCF == 0x1F) #
+      (Addr & 0xCF == 0x0F) #
+      (Addr & 0xDF == 0x1F)
+    );
+
+BDIR     = !WR_N & valid_io;
+BC1      = (!WR_N # !RD_N) & valid_io;
+CLK_OUT.d  = !CLK_OUT;
+CLK_OUT.ck = CLK_IN;
+SEL      = 0;
+```
 ---
