@@ -56,10 +56,11 @@ This project is currently in development. Stay tuned for schematics, build logs,
 ## GAL16V8 CUPL Code — ZXEightyZON
 
 ### YM2149 Configuration
+```cupl
 Name     ZXEightyZON_YM2149;
 PartNo   001;
 Date     2025-10-14;
-Revision Rev1.3;
+Revision Rev1.4;
 Designer Jonathan Gratton;
 Company  RetroCore;
 Device   g16v8;
@@ -78,10 +79,10 @@ PIN 10  = GND;
 PIN 11  = WR_N;
 PIN 12  = IORQ_N;
 PIN 13  = RD_N;
-PIN 14  = BDIR;
-PIN 15  = BC1;
-PIN 16  = SEL;
-PIN 17  = CLK_OUT;
+PIN 14  = BDIR;       /* Output to YM2149 */
+PIN 15  = BC1;        /* Output to YM2149 */
+PIN 16  = SEL;        /* Unused by YM, but set to 0 */
+PIN 17  = CLK_OUT;    /* Pass-through clock output */
 PIN 18  = NC;
 PIN 19  = NC;
 PIN 20  = VCC;
@@ -90,16 +91,27 @@ PIN 20  = VCC;
 FIELD Addr = [A7..A0];
 
 /* ---------- LATCH AND DATA DECODING ---------- */
+/*
+  All four ZON-X address/control combinations are valid.
+  Operation type is determined by control line state.
+  - Latch: BDIR=1, BC1=1
+  - Data:  BDIR=1, BC1=0
+*/
+
 EQU latch_io =
-    !IORQ_N & !WR_N & (
-      (Addr & 0xDF == 0x0F) #  // Modified ZON-X latch
-      (Addr & 0xCF == 0x0F)    // ZON-X manual latch
+    !IORQ_N & !WR_N & RD_N & (
+      (Addr & 0xDF == 0x0F) #  // Modified ZON-X
+      (Addr & 0xCF == 0x1F) #  // Original ZON-X
+      (Addr & 0xCF == 0x0F) #  // ZON-X manual
+      (Addr & 0xDF == 0x1F)    // Additional combo
     );
 
 EQU data_io =
-    !IORQ_N & !WR_N & (
-      (Addr & 0xDF == 0x1F) #  // Additional data combo
-      (Addr & 0xCF == 0x1F)    // Original ZON-X data
+    !IORQ_N & !WR_N & RD_N & (
+      (Addr & 0xDF == 0x0F) #  // Modified ZON-X
+      (Addr & 0xCF == 0x1F) #  // Original ZON-X
+      (Addr & 0xCF == 0x0F) #  // ZON-X manual
+      (Addr & 0xDF == 0x1F)    // Additional combo
     );
 
 /* ---------- CONTROL SIGNALS ---------- */
@@ -109,19 +121,19 @@ BC1  = latch_io;
 /* ---------- OTHER OUTPUTS ---------- */
 SEL      = 0;
 CLK_OUT  = CLK_IN;
-
 ```
-### AY-3-8912 Configuration 
 
+### AY-3-8912 Configuration 
 ```cupl
 Name     ZXEightyZON_AY8912;
 PartNo   002;
 Date     2025-10-14;
-Revision Rev1.2;
+Revision Rev1.4;
 Designer Jonathan Gratton;
 Company  RetroCore;
 Device   g16v8;
 
+/* ---------- PIN DEFINITIONS ---------- */
 PIN 1   = CLK_IN;     /* System clock from ZX81 */
 PIN 2   = A0;
 PIN 3   = A1;
@@ -135,29 +147,69 @@ PIN 10  = GND;
 PIN 11  = WR_N;
 PIN 12  = IORQ_N;
 PIN 13  = RD_N;
-PIN 14  = BDIR;
-PIN 15  = BC1;
+PIN 14  = BDIR;       /* Output to AY8912 */
+PIN 15  = BC1;        /* Output to AY8912 */
 PIN 16  = SEL;        /* Unused by AY, but set to 0 */
 PIN 17  = CLK_OUT;    /* ÷2 clock output for AY */
 PIN 18  = NC;
 PIN 19  = NC;
 PIN 20  = VCC;
 
+/* ---------- ADDRESS FIELD ---------- */
 FIELD Addr = [A7..A0];
 
-EQU valid_io =
-    !IORQ_N &
-    (
-      (Addr & 0xDF == 0x0F) #
-      (Addr & 0xCF == 0x1F) #
-      (Addr & 0xCF == 0x0F) #
-      (Addr & 0xDF == 0x1F)
+/* ---------- LATCH AND DATA DECODING ---------- */
+/*
+  All four ZON-X address/control combinations are valid.
+  Operation type is determined by control line state.
+  - Latch: BDIR=1, BC1=1
+  - Data:  BDIR=1, BC1=0
+*/
+
+EQU latch_io =
+    !IORQ_N & !WR_N & RD_N & (
+      (Addr & 0xDF == 0x0F) #  // Modified ZON-X
+      (Addr & 0xCF == 0x1F) #  // Original ZON-X
+      (Addr & 0xCF == 0x0F) #  // ZON-X manual
+      (Addr & 0xDF == 0x1F)    // Additional combo
     );
 
-BDIR     = !WR_N & valid_io;
-BC1      = (!WR_N # !RD_N) & valid_io;
+EQU data_io =
+    !IORQ_N & !WR_N & RD_N & (
+      (Addr & 0xDF == 0x0F) #  // Modified ZON-X
+      (Addr & 0xCF == 0x1F) #  // Original ZON-X
+      (Addr & 0xCF == 0x0F) #  // ZON-X manual
+      (Addr & 0xDF == 0x1F)    // Additional combo
+    );
+
+/* ---------- CONTROL SIGNALS ---------- */
+BDIR = latch_io # data_io;
+BC1  = latch_io;
+
+/* ---------- CLOCK DIVIDER ---------- */
 CLK_OUT.d  = !CLK_OUT;
 CLK_OUT.ck = CLK_IN;
-SEL      = 0;
+
+/* ---------- OTHER OUTPUTS ---------- */
+SEL = 0;
 ```
 ---
+### 🎛️ ZXEightyZON Control Signal Decoding Table
+
+| Operation Type | `/IORQ` | `/WR` | `/RD` | Address Match     | BDIR | BC1 | Description                          |
+|----------------|---------|-------|-------|--------------------|------|-----|--------------------------------------|
+| **Latch**      | Low     | Low   | High  | `0xDF & 0x0F`      | 1    | 1   | Modified ZON-X register select       |
+|                |         |       |       | `0xCF & 0x0F`      | 1    | 1   | ZON-X manual register select         |
+|                |         |       |       | `0xCF & 0x1F`      | 1    | 1   | Original ZON-X (used for latch)      |
+|                |         |       |       | `0xDF & 0x1F`      | 1    | 1   | Additional combo (used for latch)    |
+| **Data Write** | Low     | Low   | High  | `0xDF & 0x0F`      | 1    | 0   | Modified ZON-X data write            |
+|                |         |       |       | `0xCF & 0x0F`      | 1    | 0   | ZON-X manual data write              |
+|                |         |       |       | `0xCF & 0x1F`      | 1    | 0   | Original ZON-X data write            |
+|                |         |       |       | `0xDF & 0x1F`      | 1    | 0   | Additional combo data write          |
+
+### 🧠 Notes
+
+- All address combinations are decoded during **I/O write cycles only** (`/IORQ = 0`, `/WR = 0`, `/RD = 1`)
+- The same address may appear in both latch and data blocks, but **control line logic determines the operation**
+- `BDIR` and `BC1` are synthesized by the GAL to match AY/YM expectations
+- This decoding ensures compatibility with all known ZON-X derivatives
