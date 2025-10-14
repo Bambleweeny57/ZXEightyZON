@@ -56,17 +56,16 @@ This project is currently in development. Stay tuned for schematics, build logs,
 ## GAL16V8 CUPL Code — ZXEightyZON
 
 ### YM2149 Configuration
-
-```cupl
 Name     ZXEightyZON_YM2149;
 PartNo   001;
 Date     2025-10-14;
-Revision Rev1.2;
+Revision Rev1.3;
 Designer Jonathan Gratton;
 Company  RetroCore;
 Device   g16v8;
 
-PIN 1   = CLK_IN;     /* System clock from ZX81 */
+/* ---------- PIN DEFINITIONS ---------- */
+PIN 1   = CLK_IN;
 PIN 2   = A0;
 PIN 3   = A1;
 PIN 4   = A2;
@@ -87,19 +86,27 @@ PIN 18  = NC;
 PIN 19  = NC;
 PIN 20  = VCC;
 
+/* ---------- ADDRESS FIELD ---------- */
 FIELD Addr = [A7..A0];
 
-EQU valid_io =
-    !IORQ_N &
-    (
-      (Addr & 0xDF == 0x0F) #
-      (Addr & 0xCF == 0x1F) #
-      (Addr & 0xCF == 0x0F) #
-      (Addr & 0xDF == 0x1F)
+/* ---------- LATCH AND DATA DECODING ---------- */
+EQU latch_io =
+    !IORQ_N & !WR_N & (
+      (Addr & 0xDF == 0x0F) #  // Modified ZON-X latch
+      (Addr & 0xCF == 0x0F)    // ZON-X manual latch
     );
 
-BDIR     = !WR_N & valid_io;
-BC1      = (!WR_N # !RD_N) & valid_io;
+EQU data_io =
+    !IORQ_N & !WR_N & (
+      (Addr & 0xDF == 0x1F) #  // Additional data combo
+      (Addr & 0xCF == 0x1F)    // Original ZON-X data
+    );
+
+/* ---------- CONTROL SIGNALS ---------- */
+BDIR = latch_io # data_io;
+BC1  = latch_io;
+
+/* ---------- OTHER OUTPUTS ---------- */
 SEL      = 0;
 CLK_OUT  = CLK_IN;
 
