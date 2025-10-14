@@ -60,7 +60,7 @@ This project is currently in development. Stay tuned for schematics, build logs,
 Name     ZXEightyZON_YM2149;
 PartNo   001;
 Date     2025-10-14;
-Revision Rev1.4;
+Revision Rev1.5;
 Designer Jonathan Gratton;
 Company  RetroCore;
 Device   g16v8;
@@ -90,12 +90,12 @@ PIN 20  = VCC;
 /* ---------- ADDRESS FIELD ---------- */
 FIELD Addr = [A7..A0];
 
-/* ---------- LATCH AND DATA DECODING ---------- */
+/* ---------- OPERATION DECODING ---------- */
 /*
-  All four ZON-X address/control combinations are valid.
-  Operation type is determined by control line state.
+  YM2149 Control Modes:
   - Latch: BDIR=1, BC1=1
-  - Data:  BDIR=1, BC1=0
+  - Data Write: BDIR=1, BC1=0
+  - Data Read: BDIR=0, BC1=1
 */
 
 EQU latch_io =
@@ -108,15 +108,23 @@ EQU latch_io =
 
 EQU data_io =
     !IORQ_N & !WR_N & RD_N & (
-      (Addr & 0xDF == 0x0F) #  // Modified ZON-X
-      (Addr & 0xCF == 0x1F) #  // Original ZON-X
-      (Addr & 0xCF == 0x0F) #  // ZON-X manual
-      (Addr & 0xDF == 0x1F)    // Additional combo
+      (Addr & 0xDF == 0x0F) #
+      (Addr & 0xCF == 0x1F) #
+      (Addr & 0xCF == 0x0F) #
+      (Addr & 0xDF == 0x1F)
+    );
+
+EQU read_io =
+    !IORQ_N & !RD_N & WR_N & (
+      (Addr & 0xDF == 0x0F) #
+      (Addr & 0xCF == 0x1F) #
+      (Addr & 0xCF == 0x0F) #
+      (Addr & 0xDF == 0x1F)
     );
 
 /* ---------- CONTROL SIGNALS ---------- */
 BDIR = latch_io # data_io;
-BC1  = latch_io;
+BC1  = latch_io # read_io;
 
 /* ---------- OTHER OUTPUTS ---------- */
 SEL      = 0;
@@ -128,7 +136,7 @@ CLK_OUT  = CLK_IN;
 Name     ZXEightyZON_AY8912;
 PartNo   002;
 Date     2025-10-14;
-Revision Rev1.4;
+Revision Rev1.5;
 Designer Jonathan Gratton;
 Company  RetroCore;
 Device   g16v8;
@@ -158,33 +166,41 @@ PIN 20  = VCC;
 /* ---------- ADDRESS FIELD ---------- */
 FIELD Addr = [A7..A0];
 
-/* ---------- LATCH AND DATA DECODING ---------- */
+/* ---------- OPERATION DECODING ---------- */
 /*
-  All four ZON-X address/control combinations are valid.
-  Operation type is determined by control line state.
-  - Latch: BDIR=1, BC1=1
-  - Data:  BDIR=1, BC1=0
+  AY8912 Control Modes:
+  - Latch:      BDIR=1, BC1=1
+  - Data Write: BDIR=1, BC1=0
+  - Data Read:  BDIR=0, BC1=1
 */
 
 EQU latch_io =
     !IORQ_N & !WR_N & RD_N & (
-      (Addr & 0xDF == 0x0F) #  // Modified ZON-X
-      (Addr & 0xCF == 0x1F) #  // Original ZON-X
-      (Addr & 0xCF == 0x0F) #  // ZON-X manual
-      (Addr & 0xDF == 0x1F)    // Additional combo
+      (Addr & 0xDF == 0x0F) #
+      (Addr & 0xCF == 0x1F) #
+      (Addr & 0xCF == 0x0F) #
+      (Addr & 0xDF == 0x1F)
     );
 
 EQU data_io =
     !IORQ_N & !WR_N & RD_N & (
-      (Addr & 0xDF == 0x0F) #  // Modified ZON-X
-      (Addr & 0xCF == 0x1F) #  // Original ZON-X
-      (Addr & 0xCF == 0x0F) #  // ZON-X manual
-      (Addr & 0xDF == 0x1F)    // Additional combo
+      (Addr & 0xDF == 0x0F) #
+      (Addr & 0xCF == 0x1F) #
+      (Addr & 0xCF == 0x0F) #
+      (Addr & 0xDF == 0x1F)
+    );
+
+EQU read_io =
+    !IORQ_N & !RD_N & WR_N & (
+      (Addr & 0xDF == 0x0F) #
+      (Addr & 0xCF == 0x1F) #
+      (Addr & 0xCF == 0x0F) #
+      (Addr & 0xDF == 0x1F)
     );
 
 /* ---------- CONTROL SIGNALS ---------- */
 BDIR = latch_io # data_io;
-BC1  = latch_io;
+BC1  = latch_io # read_io;
 
 /* ---------- CLOCK DIVIDER ---------- */
 CLK_OUT.d  = !CLK_OUT;
@@ -209,7 +225,7 @@ SEL = 0;
 
 ### 🧠 Notes
 
-- All address combinations are decoded during **I/O write cycles only** (`/IORQ = 0`, `/WR = 0`, `/RD = 1`)
+- All address combinations are decoded during **I/O write cycles** (`/IORQ = 0`, `/WR = 0`, `/RD = 1`) and **I/O read cycles** (`/IORQ = 0`, `/WR = 1`, `/RD = 0`) 
 - The same address may appear in both latch and data blocks, but **control line logic determines the operation**
 - `BDIR` and `BC1` are synthesized by the GAL to match AY/YM expectations
 - This decoding ensures compatibility with all known ZON-X derivatives
