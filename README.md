@@ -6,7 +6,7 @@
 
 - **Sound Chip**: YM2149F (AY-3-8912 compatible, timing-accurate)
 - **Address Decoding**: Simple A4 decoding, mirroring ZON-X81 behavior
-- **A4 Jumper**: Optional jumper to connect A4 to ZX81 bus for **ZONX compatibility**
+- **GAL coded address decoding**: Support for all 4 main ZON X latch and data address combinations
 - **Stereo Output Configuration**:
   - Channel A: Always routed to **Left**
   - Mixed Channel: Selectable via jumper—either **Channel B** or **Channel C**
@@ -66,7 +66,7 @@ Company  RetroCore;
 Device   g16v8;
 
 /* ---------- PIN DEFINITIONS ---------- */
-PIN 1   = CLK_IN;
+PIN 1   = CLK_IN;     /* System clock from ZX81 */
 PIN 2   = A0;
 PIN 3   = A1;
 PIN 4   = A2;
@@ -81,7 +81,7 @@ PIN 12  = IORQ_N;
 PIN 13  = RD_N;
 PIN 14  = BDIR;       /* Output to YM2149 */
 PIN 15  = BC1;        /* Output to YM2149 */
-PIN 16  = SEL;        /* Unused by YM, but set to 0 */
+PIN 16  = SEL;        /* Used by YM to internaly divide tye master clock, set to 0 */
 PIN 17  = CLK_OUT;    /* Pass-through clock output */
 PIN 18  = NC;
 PIN 19  = NC;
@@ -222,6 +222,10 @@ SEL = 0;
 |                |         |       |       | `0xCF & 0x0F`      | 1    | 0   | ZON-X manual data write              |
 |                |         |       |       | `0xCF & 0x1F`      | 1    | 0   | Original ZON-X data write            |
 |                |         |       |       | `0xDF & 0x1F`      | 1    | 0   | Additional combo data write          |
+| **Data Read**  | Low     | High  | Low   | `0xDF & 0x0F`      | 0    | 1   | Modified ZON-X data read             |
+|                |         |       |       | `0xCF & 0x0F`      | 0    | 1   | ZON-X manual data read               |
+|                |         |       |       | `0xCF & 0x1F`      | 0    | 1   | Original ZON-X data read             |
+|                |         |       |       | `0xDF & 0x1F`      | 0    | 1   | Additional combo data read           |
 
 ### 🧠 Notes
 
