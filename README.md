@@ -165,6 +165,23 @@ CLK_DIV2.D   = !CLK_DIV2.Q;
 | 1    | 0   | Data Write  |
 | 0    | 1   | Data Read   |
 
+## 🧮 ZXEightyZON Truth Table – Bus Inputs vs Control & Clock Outputs
+
+| `/IORQ` | `/WR` | `/RD` | Address Match     | Operation     | BDIR | BC1 | CLK_OUT | CLK ÷ 2 |
+|---------|-------|-------|--------------------|---------------|------|-----|---------|---------|
+| Low     | Low   | High  | `0xDF & 0x0F`      | Latch         | 1    | 1   | High    | Divided |
+| Low     | Low   | High  | `0xCF & 0x0F`      | Latch         | 1    | 1   | High    | Divided |
+| Low     | Low   | High  | `0xCF & 0x1F`      | Latch         | 1    | 1   | High    | Divided |
+| Low     | Low   | High  | `0xDF & 0x1F`      | Latch         | 1    | 1   | High    | Divided |
+| Low     | Low   | High  | (same as above)    | Data Write    | 1    | 0   | High    | Divided |
+| Low     | High  | Low   | (same as above)    | Data Read     | 0    | 1   | High    | Divided |
+| Any     | Any   | Any   | No match           | No operation  | 0    | 0   | High    | Divided |
+
+> Notes:
+> - `CLK_OUT` is always a buffered pass-through of `CLK_IN` from the ZX81 bus.
+> - `CLK ÷ 2` is generated internally by toggling on each rising edge of `CLK_IN`.
+> - Address match logic uses masked comparisons: `(Addr & Mask) == Value`
+> - BDIR and BC1 are only active when valid I/O cycles and address matches occur.
 ---
 
 ## 🔀 Stereo Jumper Logic
