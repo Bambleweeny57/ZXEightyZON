@@ -36,31 +36,33 @@ This project is currently in development. Stay tuned for schematics, build logs,
 
 ---
 
-## GAL16V8 Full Pinout – ZXEightyZON Rev1.0
+## 📌 GAL16V8D Pin Assignment – ZXEightyZON Rev1.0 (Complex Mode)
 
-| **Pin** | **Signal Name**   | **Direction** | **Description**                                 |
-|--------:|-------------------|---------------|-------------------------------------------------|
-| 1       | CLK               | Input         | Master clock input                              |
-| 2       | A0                | Input         | Address line A0                                 |
-| 3       | A1                | Input         | Address line A1                                 |
-| 4       | A2                | Input         | Address line A2                                 |
-| 5       | A3                | Input         | Address line A3                                 |
-| 6       | A4                | Input         | Address line A4                                 |
-| 7       | A5                | Input         | Address line A5                                 |
-| 8       | A6                | Input         | Address line A6                                 |
-| 9       | A7                | Input         | Address line A7                                 |
-| 10      | GND               | —             | Ground                                           |
-| 11      | NC                | —             | Not connected                                    |
-| 12      | IOREQ             | Input         | I/O request signal from Z80                     |
-| 13      | WR                | Input         | Write strobe                                    |
-| 14      | RD                | Input         | Read strobe                                     |
-| 15      | BDIR              | Output        | AY control line: bus direction                  |
-| 16      | BC1               | Output        | AY control line: chip select                    |
-| 17      | CLK Through       | Output        | Buffered clock output                           |
-| 18      | CLK ÷ 2           | Output        | Divided clock output for AY (1.75 MHz)          |
-| 19      | NC                | —             | Not connected                                    |
-| 20      | VCC               | —             | +5V power supply                                 |
+| **Pin** | **Signal Name** | **Direction** | **Description**                          |
+|--------:|------------------|---------------|------------------------------------------|
+| 01      | `CLK_IN`         | Input         | System clock from ZX81                   |
+| 02      | `A0`             | Input         | Address line A0                          |
+| 03      | `A1`             | Input         | Address line A1                          |
+| 04      | `A2`             | Input         | Address line A2                          |
+| 05      | `A3`             | Input         | Address line A3                          |
+| 06      | `A4`             | Input         | Address line A4                          |
+| 07      | `A5`             | Input         | Address line A5                          |
+| 08      | `A6`             | Input         | Address line A6                          |
+| 09      | `A7`             | Input         | Address line A7                          |
+| 10      | `GND`            | —             | Ground                                   |
+| 11      | `NC`             | —             | Not connected (output-only in complex mode) |
+| 12      | `NC`             | —             | Not connected (output-only in complex mode) |
+| 13      | `WR_N`           | Input         | Write strobe from ZX81                   |
+| 14      | `RD_N`           | Input         | Read strobe from ZX81                    |
+| 15      | `IORQ_N`         | Input         | I/O request from ZX81                    |
+| 16      | `BDIR`           | Output        | PSG control line: bus direction          |
+| 17      | `BC1`            | Output        | PSG control line: chip select            |
+| 18      | `CLK_OUT`        | Output        | Buffered clock output                    |
+| 19      | `CLK_DIV2`       | Output        | Divided clock output (1.75 MHz)          |
+| 20      | `VCC`            | —             | +5V power supply                         |
 
+> ⚠️ Pins 11 and 12 are output-only in complex mode and must not be used for inputs.
+> ✅ Pin 19 is output-only and safely used for `CLK_DIV2`.
 ---
 
 ## GAL16V8 CUPL Code — ZXEightyZON
