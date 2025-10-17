@@ -1,16 +1,16 @@
-# ZXEightyZON – Coming Soon 🎶
+# ZXEightyZON 🎶
 
-**ZXEightyZON** is a new sound interface for the ZX81, built around the **YM2149F** sound chip. Designed as a timing-accurate, minimalist alternative to the AY-ZONIC-Core, this board offers clean integration with existing ZON-X81 demos and playback routines, while introducing flexible channel mixing options for stereo output.
+**ZXEightyZON** is a new sound interface for the ZX81, built around the **YM2149F** sound chip. Designed as a timing-accurate ZON compstablr sound card, this board offers clean integration with existing ZON-X81 demos and playback routines, while introducing flexible channel mixing options for stereo output.
 
 ## 🔧 Key Features
 
 - **Sound Chip**: YM2149F (AY-3-8912 compatible, timing-accurate)
 - **Address Decoding**: Simple A4 decoding, mirroring ZON-X81 behavior
-- **GAL-coded address decoding**: Supports all 4 main ZON-X latch and data address combinations, with option to add others without schematic changes
+- **GAL-coded address decoding**: Supports all 4 main ZON-X register and data address combinations, with option to add others without schematic changes
 - **Stereo Output Configuration**:
   - Channel A: Always routed to **Left**
   - Mixed Channel: Selectable via jumper—either **Channel B** or **Channel C**
-  - Right Channel: Automatically assigned to the **non-mixed** channel  
+  - Right Channel: Jumper selected to assigned to the **non-mixed** channel  
     - If **B is mixed**, then **C is Right**  
     - If **C is mixed**, then **B is Right**
 - **Noise Channel Nomination**:
@@ -22,17 +22,19 @@
   - Fully compatible with ZON-X81 demos and playback logic
   - Designed for real hardware playback and experimentation
 - **Master Clock Selection**:
-  - ZX81 bus clock to allow PSG to divide the clock (YM2149 SEL = 0)
-  - ZX81 bus clock ÷ 2 to supply the PSG with ready divided clock (YM2149 SEL = 1 or AY-3-8912 etc)
+  - Jumper based selection for either bus clock or divided by 2
+  - **ZX81 bus clock (CLK_OUT)** to allow PSG to divide the clock (YM2149 SEL = 0)
+  - **ZX81 bus clock divided by 2 (CLK_DIV2)** to supply the PSG with ready divided clock (YM2149 SEL = 1 or alternative e.g. AY-3-8912/8910 etc)
 - **PSG Master Clock Divider**:
+  - Jumper based selection for either PSG divides msster clock or master clock is already divided
   - **Closed**: Connect YM2149 SEL to GND (let PSG divide the clock)
-  - **Open**: Disconnect YM2149 SEL from GND (PSG uses divided clock)
+  - **Open**: Disconnect YM2149 SEL from GND (PSG should use ready divided clock)
 
 ---
 
 ## 🧪 Development Status
 
-This project is currently in development. Stay tuned for schematics, build logs, and demo recordings. ZXEightyZON is designed to be simple, flexible, and fun—perfect for bridging the gap while AY-ZONIC-Core continues its evolution.
+This project is currently in development. Stay tuned for schematics, build logs, and demo recordings. ZXEightyZON is designed to be simple, flexible, and fun.
 
 ---
 
@@ -58,23 +60,21 @@ This project is currently in development. Stay tuned for schematics, build logs,
 | 16      | `BDIR`           | Output        | PSG control line: bus direction          |
 | 17      | `BC1`            | Output        | PSG control line: chip select            |
 | 18      | `CLK_OUT`        | Output        | Buffered clock output                    |
-| 19      | `CLK_DIV2`       | Output        | Divided clock output (1.75 MHz)          |
+| 19      | `CLK_DIV2`       | Output        | Divided clock output (1.65 MHz)          |
 | 20      | `VCC`            | —             | +5V power supply                         |
 
 > ⚠️ Pins 11 and 12 are output-only in complex mode and must not be used for inputs.
-> ✅ Pin 19 is output-only and safely used for `CLK_DIV2`.
 ---
 
-## GAL16V8 CUPL Code — ZXEightyZON
+## GAL16V8 CUPL Code — ZXEightyZON Rev1.0
 
-### YM2149 Configuration
 ```cupl
 Name     ZXEightyZON;
 PartNo   GAL16V8;
 Date     2025-10-17;
 Revision Rev1.0;
 Designer Jonathan Gratton;
-Company  RetroCore;
+Company  Submeson Brain Corporation;
 Device   g16v8;
 
 /* ---------- PIN DEFINITIONS ---------- */
