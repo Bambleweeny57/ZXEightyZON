@@ -76,7 +76,7 @@ Company  RetroCore;
 Device   g16v8;
 
 /* ---------- PIN DEFINITIONS ---------- */
-PIN 01 = CLK_IN;
+PIN 01 = CLK_IN;     /* System clock from ZX81 */
 PIN 02 = A0;
 PIN 03 = A1;
 PIN 04 = A2;
@@ -86,15 +86,15 @@ PIN 07 = A5;
 PIN 08 = A6;
 PIN 09 = A7;
 PIN 10 = GND;
-PIN 11 = NC;
+PIN 11 = NC;         /* Not connected */
 PIN 12 = IORQ_N;
 PIN 13 = WR_N;
 PIN 14 = RD_N;
-PIN 15 = BDIR;
-PIN 16 = BC1;
-PIN 17 = CLK_OUT;
-PIN 18 = CLK_DIV2;
-PIN 19 = NC;
+PIN 15 = BDIR;       /* Output to YM2149 */
+PIN 16 = BC1;        /* Output to YM2149 */
+PIN 17 = CLK_OUT;    /* Pass-through clock output */
+PIN 18 = CLK_DIV2;   /* Divided clock output */
+PIN 19 = NC;         /* Not connected */
 PIN 20 = VCC;
 
 /* ---------- ADDRESS FIELD ---------- */
@@ -128,6 +128,12 @@ EQU read_io =
 /* ---------- CONTROL SIGNALS ---------- */
 BDIR = latch_io # data_io;
 BC1  = latch_io # read_io;
+
+/* ---------- OUTPUT ENABLE CONTROL ---------- */
+BDIR.OE     = latch_io # data_io;
+BC1.OE      = latch_io # read_io;
+CLK_OUT.OE  = 1;
+CLK_DIV2.OE = 1;
 
 /* ---------- CLOCK OUTPUTS ---------- */
 CLK_OUT = CLK_IN;
