@@ -78,7 +78,7 @@ Company  RetroCore;
 Device   g16v8;
 
 /* ---------- PIN DEFINITIONS ---------- */
-PIN 01 = CLK_IN;     /* System clock from ZX81 */
+PIN 01 = CLK_IN;
 PIN 02 = A0;
 PIN 03 = A1;
 PIN 04 = A2;
@@ -88,15 +88,15 @@ PIN 07 = A5;
 PIN 08 = A6;
 PIN 09 = A7;
 PIN 10 = GND;
-PIN 11 = NC;         /* Not connected */
-PIN 12 = IORQ_N;
+PIN 11 = NC;
+PIN 12 = NC;
 PIN 13 = WR_N;
 PIN 14 = RD_N;
-PIN 15 = BDIR;       /* Output to YM2149 */
-PIN 16 = BC1;        /* Output to YM2149 */
-PIN 17 = CLK_OUT;    /* Pass-through clock output */
-PIN 18 = CLK_DIV2;   /* Divided clock output */
-PIN 19 = NC;         /* Not connected */
+PIN 15 = IORQ_N;
+PIN 16 = BDIR;
+PIN 17 = BC1;
+PIN 18 = CLK_OUT;
+PIN 19 = CLK_DIV2;
 PIN 20 = VCC;
 
 /* ---------- ADDRESS FIELD ---------- */
@@ -143,7 +143,6 @@ CLK_OUT = CLK_IN;
 CLK_DIV2.CLK = CLK_IN;
 CLK_DIV2.D   = !CLK_DIV2.Q;
 ```
-
 ---
 
 ## 🎛️ ZXEightyZON Control Signal Decoding Table
