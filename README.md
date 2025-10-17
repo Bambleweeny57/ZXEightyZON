@@ -5,7 +5,7 @@
 ## 🔧 Key Features
 
 - **Sound Chip**: YM2149F (AY-3-8912 compatible, timing-accurate)
-- **Address Decoding**: Simple A4 (with optional A14, A15 for other PSG interfaces) decoding, mirroring ZON-X81 behavior
+- **Address Decoding**: Simple A4 decoding, mirroring ZON-X81 behavior
 - **GAL-coded address decoding**: Supports all 4 main ZON-X latch and data address combinations, with option to add others without schematic changes
 - **Stereo Output Configuration**:
   - Channel A: Always routed to **Left**
