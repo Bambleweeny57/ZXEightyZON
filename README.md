@@ -97,37 +97,24 @@ FIELD Addr = [A7..A0];
 // -------- REGISTER SELECT (LATCH) --------
 EQU latch_io =
     !IORQ_N & !WR_N & RD_N & (
-      (Addr == 0xDF) #   // [1] Modified ZON-X latch
-      (Addr == 0xCF) #   // [2] Original ZON-X latch
-      (Addr == 0xCF) #   // [3] From ZON-X manual latch
-      (Addr == 0xDF)     // [4] Additional combination latch
+      (Addr == 0xDF) #   // Modified ZON-X latch
+      (Addr == 0xCF)     // Original + Manual ZON-X latch
     );
 
 // -------- DATA WRITE --------
 EQU data_io =
     !IORQ_N & !WR_N & RD_N & (
-      (Addr == 0x0F) #   // [1] Modified ZON-X data
-      (Addr == 0x1F) #   // [2] Original ZON-X data
-      (Addr == 0x0F) #   // [3] From ZON-X manual data
-      (Addr == 0x1F)     // [4] Additional combination data
-    );
-
-// -------- DATA READ --------
-EQU read_io =
-    !IORQ_N & !RD_N & WR_N & (
-      (Addr == 0x0F) #   // [1] Modified ZON-X data read
-      (Addr == 0x1F) #   // [2] Original ZON-X data read
-      (Addr == 0x0F) #   // [3] From ZON-X manual data read
-      (Addr == 0x1F)     // [4] Additional combination data read
+      (Addr == 0x0F) #   // Modified + Manual ZON-X data
+      (Addr == 0x1F)     // Original + Additional ZON-X data
     );
 
 /* ---------- CONTROL SIGNALS ---------- */
 BDIR = data_io;
-BC1  = latch_io # read_io;
+BC1  = latch_io;
 
 /* ---------- OUTPUT ENABLE CONTROL ---------- */
 BDIR.OE     = data_io;
-BC1.OE      = latch_io # read_io;
+BC1.OE      = latch_io;
 CLK_OUT.OE  = 1;
 CLK_DIV2.OE = 1;
 
