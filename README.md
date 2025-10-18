@@ -1,16 +1,22 @@
 # ZXEightyZON 🎶
 
-**ZXEightyZON** is a new sound interface for the ZX81, built around the **YM2149F** sound chip. Designed as a timing-accurate ZON compstablr sound card, this board offers clean integration with existing ZON-X81 demos and playback routines, while introducing flexible channel mixing options for stereo output.
+**ZXEightyZON** is a new sound interface for the ZX81, built around the **YM2149F** sound chip. Designed as a timing-accurate ZON-compatible sound card, this board offers clean integration with existing ZON-X81 demos and playback routines, while introducing flexible channel mixing options for stereo output.
+
+---
 
 ## 🔧 Key Features
 
 - **Sound Chip**: YM2149F (AY-3-8912 compatible, timing-accurate)
-- **Address Decoding**: Simple A4 decoding, mirroring ZON-X81 behavior
-- **GAL-coded address decoding**: Supports all 4 main ZON-X register and data address combinations, with option to add others without schematic changes
+- **Address Decoding**:  
+  Explicit 8-bit address decoding via GAL logic, supporting all 4 ZON-X register and data address combinations:
+  - Latch: `0xDF`, Data: `0x0F` → Modified ZON-X  
+  - Latch: `0xCF`, Data: `0x1F` → Original ZON-X  
+  - Latch: `0xCF`, Data: `0x0F` → From ZON-X user manual  
+  - Latch: `0xDF`, Data: `0x1F` → Additional combination
 - **Stereo Output Configuration**:
   - Channel A: Always routed to **Left**
   - Mixed Channel: Selectable via jumper—either **Channel B** or **Channel C**
-  - Right Channel: Jumper selected to assigned to the **non-mixed** channel  
+  - Right Channel: Assigned to the **non-mixed** channel  
     - If **B is mixed**, then **C is Right**  
     - If **C is mixed**, then **B is Right**
 - **Noise Channel Nomination**:
@@ -18,42 +24,25 @@
   - Supports regional playback preferences:
     - Western demos typically mix **Channel B**
     - Eastern demos often mix **Channel C**
-- **Compatibility**:
-  - Fully compatible with ZON-X81 demos and playback logic
-  - Designed for real hardware playback and experimentation
 - **Master Clock Selection**:
-  - Jumper based selection for either bus clock or divided by 2
-  - **ZX81 bus clock (CLK_OUT)** to allow PSG to divide the clock (YM2149 SEL = 0)
-  - **ZX81 bus clock divided by 2 (CLK_DIV2)** to supply the PSG with ready divided clock (YM2149 SEL = 1 or alternative e.g. AY-3-8912/8910 etc)
-- **PSG Master Clock Divider**:
-  - Jumper based selection for either PSG divides msster clock or master clock is already divided
-  - **Closed**: Connect YM2149 SEL to GND (let PSG divide the clock)
-  - **Open**: Disconnect YM2149 SEL from GND (PSG should use ready divided clock)
+  - Jumper-based selection for either bus clock or divided-by-2 clock
+  - `CLK_OUT`: Buffered ZX81 bus clock (YM2149 SEL = 0)
+  - `CLK_DIV2`: Internally divided clock (YM2149 SEL = 1 or for AY-3-8912/8910)
+- **PSG Clock Divider Control**:
+  - Jumper-based selection for whether PSG divides master clock or receives pre-divided clock
+  - **Closed**: Connect YM2149 SEL to GND (PSG divides clock)
+  - **Open**: Disconnect SEL from GND (PSG uses divided clock)
 
 ---
 
-## 🧪 Development Status
-
-This project is currently in development. Stay tuned for schematics, build logs, and demo recordings. ZXEightyZON is designed to be simple, flexible, and fun.
-
----
-
-## 📌 GAL16V8D Pin Assignment – ZXEightyZON Rev1.0 (Complex Mode)
+## 📌 GAL16V8D Pin Assignment – ZXEightyZON Rev1.0
 
 | **Pin** | **Signal Name** | **Direction** | **Description**                          |
 |--------:|------------------|---------------|------------------------------------------|
 | 01      | `CLK_IN`         | Input         | System clock from ZX81                   |
-| 02      | `A0`             | Input         | Address line A0                          |
-| 03      | `A1`             | Input         | Address line A1                          |
-| 04      | `A2`             | Input         | Address line A2                          |
-| 05      | `A3`             | Input         | Address line A3                          |
-| 06      | `A4`             | Input         | Address line A4                          |
-| 07      | `A5`             | Input         | Address line A5                          |
-| 08      | `A6`             | Input         | Address line A6                          |
-| 09      | `A7`             | Input         | Address line A7                          |
+| 02–09   | `A0–A7`          | Input         | Address lines A0 to A7                   |
 | 10      | `GND`            | —             | Ground                                   |
-| 11      | `NC`             | —             | Not connected (output-only in complex mode) |
-| 12      | `NC`             | —             | Not connected (output-only in complex mode) |
+| 11–12   | `NC`             | —             | Not connected (output-only in complex mode) |
 | 13      | `WR_N`           | Input         | Write strobe from ZX81                   |
 | 14      | `RD_N`           | Input         | Read strobe from ZX81                    |
 | 15      | `IORQ_N`         | Input         | I/O request from ZX81                    |
@@ -64,9 +53,10 @@ This project is currently in development. Stay tuned for schematics, build logs,
 | 20      | `VCC`            | —             | +5V power supply                         |
 
 > ⚠️ Pins 11 and 12 are output-only in complex mode and must not be used for inputs.
+
 ---
 
-## GAL16V8 CUPL Code — ZXEightyZON Rev1.0
+## 🧮 GAL16V8 CUPL Code — ZXEightyZON Rev1.0
 
 ```cupl
 Name     ZXEightyZON;
@@ -103,36 +93,40 @@ PIN 20 = VCC;
 FIELD Addr = [A7..A0];
 
 /* ---------- OPERATION DECODING ---------- */
+
+// -------- REGISTER SELECT (LATCH) --------
 EQU latch_io =
     !IORQ_N & !WR_N & RD_N & (
-      (Addr & 0xDF == 0x0F) #
-      (Addr & 0xCF == 0x1F) #
-      (Addr & 0xCF == 0x0F) #
-      (Addr & 0xDF == 0x1F)
+      (Addr == 0xDF) #   // [1] Modified ZON-X latch
+      (Addr == 0xCF) #   // [2] Original ZON-X latch
+      (Addr == 0xCF) #   // [3] From ZON-X manual latch
+      (Addr == 0xDF)     // [4] Additional combination latch
     );
 
+// -------- DATA WRITE --------
 EQU data_io =
     !IORQ_N & !WR_N & RD_N & (
-      (Addr & 0xDF == 0x0F) #
-      (Addr & 0xCF == 0x1F) #
-      (Addr & 0xCF == 0x0F) #
-      (Addr & 0xDF == 0x1F)
+      (Addr == 0x0F) #   // [1] Modified ZON-X data
+      (Addr == 0x1F) #   // [2] Original ZON-X data
+      (Addr == 0x0F) #   // [3] From ZON-X manual data
+      (Addr == 0x1F)     // [4] Additional combination data
     );
 
+// -------- DATA READ --------
 EQU read_io =
     !IORQ_N & !RD_N & WR_N & (
-      (Addr & 0xDF == 0x0F) #
-      (Addr & 0xCF == 0x1F) #
-      (Addr & 0xCF == 0x0F) #
-      (Addr & 0xDF == 0x1F)
+      (Addr == 0x0F) #   // [1] Modified ZON-X data read
+      (Addr == 0x1F) #   // [2] Original ZON-X data read
+      (Addr == 0x0F) #   // [3] From ZON-X manual data read
+      (Addr == 0x1F)     // [4] Additional combination data read
     );
 
 /* ---------- CONTROL SIGNALS ---------- */
-BDIR = latch_io # data_io;
+BDIR = data_io;
 BC1  = latch_io # read_io;
 
 /* ---------- OUTPUT ENABLE CONTROL ---------- */
-BDIR.OE     = latch_io # data_io;
+BDIR.OE     = data_io;
 BC1.OE      = latch_io # read_io;
 CLK_OUT.OE  = 1;
 CLK_DIV2.OE = 1;
@@ -143,49 +137,24 @@ CLK_OUT = CLK_IN;
 CLK_DIV2.CLK = CLK_IN;
 CLK_DIV2.D   = !CLK_DIV2.Q;
 ```
+
 ---
-
-## 🎛️ ZXEightyZON Control Signal Decoding Table
-
-> Address match logic uses masked comparisons: `(Addr & Mask) == Value`
-
-| Operation Type | `/IORQ` | `/WR` | `/RD` | Address Match     | BDIR | BC1 | Description                          |
-|----------------|---------|-------|-------|--------------------|------|-----|--------------------------------------|
-| **Latch**      | Low     | Low   | High  | `0xDF & 0x0F`      | 1    | 1   | Modified ZON-X register select       |
-|                |         |       |       | `0xCF & 0x0F`      | 1    | 1   | ZON-X manual register select         |
-|                |         |       |       | `0xCF & 0x1F`      | 1    | 1   | Original ZON-X (used for latch)      |
-|                |         |       |       | `0xDF & 0x1F`      | 1    | 1   | Additional combo (used for latch)    |
-| **Data Write** | Low     | Low   | High  | Same as above      | 1    | 0   | Data write to selected register      |
-| **Data Read**  | Low     | High  | Low   | Same as above      | 0    | 1   | Read from selected register          |
-
-### AY/YM Control Mode Summary
-
-| BDIR | BC1 | Mode        |
-|------|-----|-------------|
-| 1    | 1   | Latch       |
-| 1    | 0   | Data Write  |
-| 0    | 1   | Data Read   |
 
 ## 🧮 ZXEightyZON Truth Table – Bus Inputs vs Control & Clock Outputs
 
-| `/IORQ` | `/WR` | `/RD` | Address Match     | Operation     | BDIR | BC1 | CLK_OUT | CLK_DIV2 |
-|---------|-------|-------|--------------------|---------------|------|-----|---------|---------|
-| Low     | Low   | High  | `0xDF & 0x0F`      | Latch         | 1    | 1   | CLK     | Divided |
-| Low     | Low   | High  | `0xCF & 0x0F`      | Latch         | 1    | 1   | CLK     | Divided |
-| Low     | Low   | High  | `0xCF & 0x1F`      | Latch         | 1    | 1   | CLK     | Divided |
-| Low     | Low   | High  | `0xDF & 0x1F`      | Latch         | 1    | 1   | CLK     | Divided |
-| Low     | Low   | High  | (same as above)    | Data Write    | 1    | 0   | CLK     | Divided |
-| Low     | High  | Low   | (same as above)    | Data Read     | 0    | 1   | CLK     | Divided |
-| Any     | Any   | Any   | No match           | No operation  | 0    | 0   | CLK     | Divided |
+| `/IORQ` | `/WR` | `/RD` | `Addr` Match | Operation     | BDIR | BC1 | CLK_OUT | CLK_DIV2 |
+|---------|-------|-------|--------------|---------------|------|-----|---------|----------|
+| Low     | Low   | High  | `0xDF`        | Latch         | 1    | 1   | CLK     | ÷2       |
+| Low     | Low   | High  | `0xCF`        | Latch         | 1    | 1   | CLK     | ÷2       |
+| Low     | Low   | High  | `0x0F`        | Data Write    | 1    | 0   | CLK     | ÷2       |
+| Low     | Low   | High  | `0x1F`        | Data Write    | 1    | 0   | CLK     | ÷2       |
+| Low     | High  | Low   | `0x0F`        | Data Read     | 0    | 1   | CLK     | ÷2       |
+| Low     | High  | Low   | `0x1F`        | Data Read     | 0    | 1   | CLK     | ÷2       |
+| Any     | Any   | Any   | No match      | No operation  | 0    | 0   | CLK     | ÷2       |
 
-> Notes:
-> - `CLK_OUT` is always a buffered pass-through of `CLK_IN` from the ZX81 bus.
-> - `CLK_DIV2` is generated internally by toggling on each rising edge of `CLK_IN`.
-> - Address match logic uses masked comparisons: `(Addr & Mask) == Value`
-> - BDIR and BC1 are only active when valid I/O cycles and address matches occur.
 ---
 
-## 🔀 Stereo Jumper Logic
+## 🎛️ Stereo Jumper Logic
 
 | Jumper Setting | Mixed Channel | Left Output | Right Output |
 |----------------|----------------|-------------|--------------|
