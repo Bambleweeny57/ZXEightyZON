@@ -1,0 +1,78 @@
+Name     ZXEightyZON ;
+PartNo   ATF16V8C;
+Date     10/19/2025, 2:59:57 PM ;
+Revision 1.0 ;
+Designer Bambleweeny57 ;
+Company  Submeson Brain Corporation ;
+Assembly None ;
+Device   g16v8a;
+
+/* ---------- PIN DEFINITIONS ---------- */
+PIN 01 = CLK_IN;
+PIN 02 = A0;
+PIN 03 = A1;
+PIN 04 = A2;
+PIN 05 = A3;
+PIN 06 = A4;
+PIN 07 = A5;
+PIN 08 = A6;
+PIN 09 = A7;
+PIN 10 = GND;
+PIN 11 = NC;
+PIN 12 = NC;
+PIN 13 = WR_N;
+PIN 14 = RD_N;
+PIN 15 = IORQ_N;
+PIN 16 = BDIR;
+PIN 17 = BC1;
+PIN 18 = CLK_OUT;
+PIN 19 = CLK_DIV2;
+PIN 20 = VCC;
+
+/* ---------- ADDRESS FIELD ---------- */
+FIELD Addr = [A7..A0];
+
+/* ---------- OPERATION DECODING ---------- */
+
+// -------- REGISTER SELECT (LATCH) --------
+EQU latch_io =
+    !IORQ_N & !WR_N & RD_N & (
+      (Addr == 0xDF) #   // [1] Modified ZON-X latch
+      (Addr == 0xCF) #   // [2] Original ZON-X latch
+      (Addr == 0xCF) #   // [3] Manual variant latch
+      (Addr == 0xDF)     // [4] Additional combination latch
+    );
+
+// -------- DATA WRITE --------
+EQU data_io =
+    !IORQ_N & !WR_N & RD_N & (
+      (Addr == 0x0F) #   // [1] Modified ZON-X data
+      (Addr == 0x1F) #   // [2] Original ZON-X data
+      (Addr == 0x0F) #   // [3] Manual variant data
+      (Addr == 0x1F)     // [4] Additional combination data
+    );
+
+// -------- DATA READ --------
+EQU read_io =
+    !IORQ_N & !RD_N & WR_N & (
+      (Addr == 0x0F) #   // [1] Modified ZON-X data read
+      (Addr == 0x1F) #   // [2] Original ZON-X data read
+      (Addr == 0x0F) #   // [3] Manual variant data read
+      (Addr == 0x1F)     // [4] Additional combination data read
+    );
+
+/* ---------- CONTROL SIGNALS ---------- */
+BDIR = data_io & !read_io;     // BDIR = 1 for write, 0 for read
+BC1  = latch_io # read_io;     // BC1 = 1 for latch or read
+
+/* ---------- OUTPUT ENABLE CONTROL ---------- */
+BDIR.OE     = data_io # read_io;
+BC1.OE      = latch_io # read_io;
+CLK_OUT.OE  = 1;
+CLK_DIV2.OE = 1;
+
+/* ---------- CLOCK OUTPUTS ---------- */
+CLK_OUT = CLK_IN;
+
+CLK_DIV2.CLK = CLK_IN;
+CLK_DIV2.D   = !CLK_DIV2.Q;
