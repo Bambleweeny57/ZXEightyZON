@@ -63,7 +63,7 @@ Name     ZXEightyZON;
 PartNo   GAL16V8;
 Date     2025-10-17;
 Revision Rev1.0;
-Designer Jonathan Gratton;
+Designer Bambleweeny57;
 Company  Submeson Brain Corporation;
 Device   g16v8;
 
