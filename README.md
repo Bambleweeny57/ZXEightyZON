@@ -99,8 +99,8 @@ EQU latch_io =
     !IORQ_N & !WR_N & RD_N & (
       (Addr == 0xDF) #   // [1] Modified ZON-X latch
       (Addr == 0xCF) #   // [2] Original ZON-X latch
-      (Addr == 0xC7) #   // [3] Manual variant latch
-      (Addr == 0xD7)     // [4] Additional combination latch
+      (Addr == 0xCF) #   // [3] Manual variant latch
+      (Addr == 0xDF)     // [4] Additional combination latch
     );
 
 // -------- DATA WRITE --------
@@ -108,8 +108,8 @@ EQU data_io =
     !IORQ_N & !WR_N & RD_N & (
       (Addr == 0x0F) #   // [1] Modified ZON-X data
       (Addr == 0x1F) #   // [2] Original ZON-X data
-      (Addr == 0x07) #   // [3] Manual variant data
-      (Addr == 0x17)     // [4] Additional combination data
+      (Addr == 0x0F) #   // [3] Manual variant data
+      (Addr == 0x1F)     // [4] Additional combination data
     );
 
 // -------- DATA READ --------
@@ -117,8 +117,8 @@ EQU read_io =
     !IORQ_N & !RD_N & WR_N & (
       (Addr == 0x0F) #   // [1] Modified ZON-X data read
       (Addr == 0x1F) #   // [2] Original ZON-X data read
-      (Addr == 0x07) #   // [3] Manual variant data read
-      (Addr == 0x17)     // [4] Additional combination data read
+      (Addr == 0x0F) #   // [3] Manual variant data read
+      (Addr == 0x1F)     // [4] Additional combination data read
     );
 
 /* ---------- CONTROL SIGNALS ---------- */
