@@ -1,0 +1,33 @@
+# Berkeley PLA format generated using
+#
+# CUPL(WM)        5.0a Serial# MW-10400000
+# Device          g16v8ma  Library DLIB-h-40-8
+# Created         Mon Oct 20 05:07:41 2025
+# Name            ZXEightyZON
+# Partno          Rev1.0
+# Revision        01
+# Date            20/10/2025
+# Designer        Jonathan Gratton
+# Company         AY-ZONIC
+# Assembly        ZXEightyZON
+# Location        Wakefield
+#
+# Inputs  0 1 A0 A1 
+#         A2 A3 A4 A5 
+#         A6 A7 BC1 BDIR 
+#         CLK_OUT IORQ_N Q RD_N 
+#         WR_N 
+# Outputs BC1 BDIR BC1.oe BDIR.oe 
+#         IORQ_N.oe RD_N.oe WR_N.oe 
+.i 17
+.o 7
+.p 8
+--1-000000---0-01 1~~~~~~
+--1111-110---0-10 1~~~~~~
+--1-000000---0-10 ~1~~~~~
+-1--------------- ~~1~~~~
+-1--------------- ~~~1~~~
+1---------------- ~~~~1~~
+1---------------- ~~~~~1~
+1---------------- ~~~~~~1
+.end

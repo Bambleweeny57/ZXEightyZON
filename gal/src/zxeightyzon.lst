@@ -1,0 +1,92 @@
+LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 1
+
+CUPL(WM): Universal Compiler for Programmable Logic
+Version 5.0a Serial# MW-10400000
+Copyright (c) 1983, 1998 Logical Devices, Inc.
+Created Mon Oct 20 05:07:40 2025
+
+  1:Name ZXEightyZON;
+  2:PartNo Rev1.0;
+  3:Date 20/10/2025;
+  4:Revision 01;
+  5:Designer Jonathan Gratton;
+  6:Company AY-ZONIC;
+  7:Assembly ZXEightyZON;
+  8:Location Wakefield;
+  9:Device g16v8ma;
+ 10:
+ 11:/* ---------- PIN DEFINITIONS ---------- */
+ 12://PIN 01 = CLK;
+
+ 13:PIN 02 = A0;
+ 14:PIN 03 = A1;
+ 15:PIN 04 = A2;
+ 16:PIN 05 = A3;
+ 17:PIN 06 = A4;
+ 18:PIN 07 = A5;
+ 19:PIN 08 = A6;
+ 20:PIN 09 = A7;
+ 21://PIN 10 = GND;
+
+ 22://PIN 11 = NC;
+
+ 23:PIN 12 = Q;
+ 24:PIN 13 = WR_N;
+ 25:PIN 14 = RD_N;
+ 26:PIN 15 = IORQ_N;
+ 27:PIN 16 = BDIR;
+ 28:PIN 17 = BC1;
+ 29:PIN 18 = CLK_OUT;
+ 30://PIN 19 = CLK_DIV2;
+
+ 31://PIN 20 = VCC;
+
+ 32:
+ 33:/* ---------- OPERATION DECODING ---------- */
+ 34:
+ 35:/* -------- REGISTER SELECT (LATCH) -------- */
+ 36:latch_io = !IORQ_N & !WR_N & RD_N & (
+ 37:  (!A7 &  A6 &  A5 &  A4 &  A3 &  A2 &  A1 &  A0) #  /* 0xDF */
+ 38:  (!A7 &  A6 &  A5 & !A4 &  A3 &  A2 &  A1 &  A0)    /* 0xCF */
+ 39:);
+ 40:
+ 41:/* -------- DATA WRITE -------- */
+ 42:data_io = !IORQ_N & !WR_N & RD_N & (
+ 43:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
+ 44:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
+ 45:);
+ 46:
+ 47:/* -------- DATA READ -------- */
+ 48:read_io = !IORQ_N & !RD_N & WR_N & (
+ 49:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
+ 50:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
+ 51:);
+ 52:
+ 53:/* ---------- CONTROL SIGNALS ---------- */
+
+LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 2
+
+CUPL(WM): Universal Compiler for Programmable Logic
+Version 5.0a Serial# MW-10400000
+Copyright (c) 1983, 1998 Logical Devices, Inc.
+Created Mon Oct 20 05:07:40 2025
+
+ 54:BDIR = data_io & !read_io;
+ 55:BC1  = latch_io # read_io;
+ 56:
+ 57:/* ---------- CLOCK OUTPUTS ---------- */
+ 58://CLK_OUT = CLK;
+
+ 59://Q.D = !Q;
+
+ 60://CLK_DIV2.CLK = CLK_IN;
+
+ 61://CLK_DIV2.D   = !CLK_DIV2;
+
+ 62:
+ 63:
+
+
+
+Jedec Fuse Checksum       (1d0f)
+Jedec Transmit Checksum   (a7ca)
