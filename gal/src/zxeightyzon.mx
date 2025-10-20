@@ -1,0 +1,61 @@
+Name ZXEightyZON;
+PartNo Rev1.0;
+Date 20/10/2025;
+Revision 01;
+Designer Jonathan Gratton;
+Company AY-ZONIC;
+Assembly ZXEightyZON;
+Location Wakefield;
+Device g16v8ma;
+
+/* ---------- PIN DEFINITIONS ---------- */
+//PIN 01 = CLK;
+PIN 02 = A0;
+PIN 03 = A1;
+PIN 04 = A2;
+PIN 05 = A3;
+PIN 06 = A4;
+PIN 07 = A5;
+PIN 08 = A6;
+PIN 09 = A7;
+//PIN 10 = GND;
+//PIN 11 = NC;
+PIN 12 = Q;
+PIN 13 = WR_N;
+PIN 14 = RD_N;
+PIN 15 = IORQ_N;
+PIN 16 = BDIR;
+PIN 17 = BC1;
+PIN 18 = CLK_OUT;
+//PIN 19 = CLK_DIV2;
+//PIN 20 = VCC;
+
+/* ---------- OPERATION DECODING ---------- */
+
+/* -------- REGISTER SELECT (LATCH) -------- */
+latch_io = !IORQ_N & !WR_N & RD_N & (
+  (!A7 &  A6 &  A5 &  A4 &  A3 &  A2 &  A1 &  A0) #  /* 0xDF */
+  (!A7 &  A6 &  A5 & !A4 &  A3 &  A2 &  A1 &  A0)    /* 0xCF */
+);
+
+/* -------- DATA WRITE -------- */
+data_io = !IORQ_N & !WR_N & RD_N & (
+  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
+  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
+);
+
+/* -------- DATA READ -------- */
+read_io = !IORQ_N & !RD_N & WR_N & (
+  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
+  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
+);
+
+/* ---------- CONTROL SIGNALS ---------- */
+BDIR = data_io & !read_io;
+BC1  = latch_io # read_io;
+
+/* ---------- CLOCK OUTPUTS ---------- */
+//CLK_OUT = CLK;
+//Q.D = !Q;
+//CLK_DIV2.CLK = CLK_IN;
+//CLK_DIV2.D   = !CLK_DIV2;

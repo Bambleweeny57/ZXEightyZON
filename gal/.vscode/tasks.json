@@ -2,16 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Compile ZXEightyZON GAL",
-      "type": "shell",
-      "command": "C:\\wincupl\\wincupl\\wincupl.exe",
-      "args": [
-        "${workspaceFolder}\\gal\\src\\zxeightyzon.cpl"
-      ],
-      "group": "build",
-      "problemMatcher": [],
-      "detail": "Compiles GAL16V8D CUPL logic for ZXEightyZON decoding"
-    },
+  "label": "Compile ZXEightyZON GAL",
+  "type": "shell",
+  "command": "cmd.exe",
+  "args": [
+    "/c",
+    "${workspaceFolder}\\tools\\cupl.bat",
+    "${workspaceFolder}\\src\\zxeightyzon.pld"
+  ],
+  "group": "build",
+  "problemMatcher": [],
+  "detail": "Compiles GAL16V8D CUPL logic using cupl.bat via cmd.exe"
+},
     {
       "label": "Copy JEDEC to Build",
       "type": "shell",
@@ -19,8 +21,8 @@
       "args": [
         "/c",
         "copy",
-        "${workspaceFolder}\\gal\\src\\zxeightyzon.jed",
-        "${workspaceFolder}\\gal\\build\\zxeightyzon.jed"
+        "${workspaceFolder}\\src\\zxeightyzon.jed",
+        "${workspaceFolder}\\build\\zxeightyzon.jed"
       ],
       "group": "build",
       "dependsOn": "Compile ZXEightyZON GAL",
