@@ -1,0 +1,54 @@
+%SIGNAL
+PIN   2 =  A0 
+PIN   3 =  A1 
+PIN   4 =  A2 
+PIN   5 =  A3 
+PIN   6 =  A4 
+PIN   7 =  A5 
+PIN   8 =  A6 
+PIN   9 =  A7 
+PIN  17 =  BC1 
+PIN  16 =  BDIR 
+PIN  18 =  CLK_OUT 
+PIN  15 =  IORQ_N 
+PIN  12 =  Q 
+PIN  14 =  RD_N 
+PIN  13 =  WR_N 
+%END
+
+%FIELD
+%END
+
+%EQUATION
+BC1 =>
+    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & !RD_N & WR_N
+  # A0 & A1 & A2 & A3 & A5 & A6 & !A7 & !IORQ_N & RD_N & !WR_N
+
+BDIR =>
+    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & RD_N & !WR_N
+
+data_io =>
+    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & RD_N & !WR_N
+
+latch_io =>
+    A0 & A1 & A2 & A3 & A5 & A6 & !A7 & !IORQ_N & RD_N & !WR_N
+
+read_io =>
+    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & !RD_N & WR_N
+
+BC1.oe  =>
+    1 
+
+BDIR.oe  =>
+    1 
+
+IORQ_N.oe  =>
+    0 
+
+RD_N.oe  =>
+    0 
+
+WR_N.oe  =>
+    0 
+
+%END
