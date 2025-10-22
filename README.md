@@ -35,109 +35,119 @@
 
 ---
 
-## 📌 GAL16V8D Pin Assignment – ZXEightyZON Rev1.0
+## 📌 GAL22V10D Pin Assignment – ZXEightyZON Rev1.0
 
 | **Pin** | **Signal Name** | **Direction** | **Description**                          |
 |--------:|------------------|---------------|------------------------------------------|
 | 01      | `CLK_IN`         | Input         | System clock from ZX81                   |
-| 02–09   | `A0–A7`          | Input         | Address lines A0 to A7                   |
-| 10      | `GND`            | —             | Ground                                   |
-| 11–12   | `NC`             | —             | Not connected (output-only in complex mode) |
-| 13      | `WR_N`           | Input         | Write strobe from ZX81                   |
-| 14      | `RD_N`           | Input         | Read strobe from ZX81                    |
-| 15      | `IORQ_N`         | Input         | I/O request from ZX81                    |
-| 16      | `BDIR`           | Output        | PSG control line: bus direction          |
-| 17      | `BC1`            | Output        | PSG control line: chip select            |
-| 18      | `CLK_OUT`        | Output        | Buffered clock output                    |
-| 19      | `CLK_DIV2`       | Output        | Divided clock output (1.65 MHz)          |
-| 20      | `VCC`            | —             | +5V power supply                         |
-
-> ⚠️ Pins 11 and 12 are output-only in complex mode and must not be used for inputs.
+| 02      | `A0`             | Input         | Address line A0                          |
+| 03      | `A1`             | Input         | Address line A1                          |
+| 04      | `A2`             | Input         | Address line A2                          |
+| 05      | `A3`             | Input         | Address line A3                          |
+| 06      | `A4`             | Input         | Address line A4                          |
+| 07      | `A5`             | Input         | Address line A5                          |
+| 08      | `A6`             | Input         | Address line A6                          |
+| 09      | `A7`             | Input         | Address line A7                          |
+| 10      | `WR_N`           | Input         | Write strobe from ZX81                   |
+| 11      | `IORQ_N`         | Input         | I/O request from ZX81                    |
+| 12      | —                | —             | Unused (do not assign)                   |
+| 13      | `RD_N`           | Input         | Read strobe from ZX81                    |
+| 14      | `BDIR`           | Output        | PSG control line: bus direction          |
+| 15      | `BC1`            | Output        | PSG control line: chip select            |
+| 16      | —                | —             | Unused (available for future use)        |
+| 17      | `CLK_DIV2`       | Output        | Divided clock output (1.65 MHz)          |
+| 18–22   | —                | —             | Unused (left floating, compiler-safe)    |
+| 23      | —                | —             | Not used (internal logic only)           |
+| 24      | `VCC`            | —             | +5V power supply                         |
 
 ---
 
-## 🧮 GAL16V8 CUPL Code — ZXEightyZON Rev1.0
+## 🧮 GAL22V10 CUPL Code — ZXEightyZON Rev1.0
 
 ```cupl
 Name     ZXEightyZON;
-PartNo   GAL16V8;
-Date     2025-10-17;
-Revision Rev1.0;
-Designer Bambleweeny57;
-Company  Submeson Brain Corporation;
-Device   g16v8;
+PartNo   01;
+Date     22/10/2025;
+Revision 1.0;
+Designer Jonathan Gratton;
+Company  AY-ZONIC;
+Assembly ZXEightyZON;
+Location U2;
+Device   GAL22V10;
 
-/* ---------- PIN DEFINITIONS ---------- */
-PIN 01 = CLK_IN;
-PIN 02 = A0;
-PIN 03 = A1;
-PIN 04 = A2;
-PIN 05 = A3;
-PIN 06 = A4;
-PIN 07 = A5;
-PIN 08 = A6;
-PIN 09 = A7;
-PIN 10 = GND;
-PIN 11 = NC;
-PIN 12 = NC;
-PIN 13 = WR_N;
-PIN 14 = RD_N;
-PIN 15 = IORQ_N;
-PIN 16 = BDIR;
-PIN 17 = BC1;
-PIN 18 = CLK_OUT;
-PIN 19 = CLK_DIV2;
-PIN 20 = VCC;
+/* ---------- PIN DEFINITIONS (Mode 3) ---------- */
+PIN 1  = CLK_IN;
+PIN 2  = A0;
+PIN 3  = A1;
+PIN 4  = A2;
+PIN 5  = A3;
+PIN 6  = A4;
+PIN 7  = A5;
+PIN 8  = A6;
+PIN 9  = A7;
+PIN 10 = WR_N;
+PIN 11 = IORQ_N;
+PIN 13 = RD_N;
+
+PIN 14 = BDIR;
+PIN 15 = BC1;
+PIN 17 = CLK_DIV2;
 
 /* ---------- ADDRESS FIELD ---------- */
 FIELD Addr = [A7..A0];
 
-/* ---------- OPERATION DECODING ---------- */
+/* ---------- ZONX ADDRESS DECODING ---------- */
 
 // -------- REGISTER SELECT (LATCH) --------
-EQU latch_io =
-    !IORQ_N & !WR_N & RD_N & (
-      (Addr == 0xDF) #   // [1] Modified ZON-X latch
-      (Addr == 0xCF) #   // [2] Original ZON-X latch
-      (Addr == 0xCF) #   // [3] Manual variant latch
-      (Addr == 0xDF)     // [4] Additional combination latch
-    );
+ADDR_LATCH1 = Addr == H'DF';  // Modified ZONX latch
+ADDR_LATCH2 = Addr == H'CF';  // Original ZONX latch
+ADDR_LATCH3 = Addr == H'CF';  // Manual variant latch
+ADDR_LATCH4 = Addr == H'DF';  // Additional combination latch
+
+latch_io = !IORQ_N & !WR_N & RD_N & (
+  ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
+);
 
 // -------- DATA WRITE --------
-EQU data_io =
-    !IORQ_N & !WR_N & RD_N & (
-      (Addr == 0x0F) #   // [1] Modified ZON-X data
-      (Addr == 0x1F) #   // [2] Original ZON-X data
-      (Addr == 0x0F) #   // [3] Manual variant data
-      (Addr == 0x1F)     // [4] Additional combination data
-    );
+ADDR_DATA1 = Addr == H'0F';  // Modified ZONX data
+ADDR_DATA2 = Addr == H'1F';  // Original ZONX data
+ADDR_DATA3 = Addr == H'0F';  // Manual variant data
+ADDR_DATA4 = Addr == H'1F';  // Additional combination data
+
+data_io = !IORQ_N & !WR_N & RD_N & (
+  ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
+);
 
 // -------- DATA READ --------
-EQU read_io =
-    !IORQ_N & !RD_N & WR_N & (
-      (Addr == 0x0F) #   // [1] Modified ZON-X data read
-      (Addr == 0x1F) #   // [2] Original ZON-X data read
-      (Addr == 0x0F) #   // [3] Manual variant data read
-      (Addr == 0x1F)     // [4] Additional combination data read
-    );
+ADDR_READ1 = Addr == H'0F';  // Modified ZONX data read
+ADDR_READ2 = Addr == H'1F';  // Original ZONX data read
+ADDR_READ3 = Addr == H'0F';  // Manual variant data read
+ADDR_READ4 = Addr == H'1F';  // Additional combination data read
+
+read_io = !IORQ_N & !RD_N & WR_N & (
+  ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
+);
 
 /* ---------- CONTROL SIGNALS ---------- */
-BDIR = data_io & !read_io;     // BDIR = 1 for write, 0 for read
-BC1  = latch_io # read_io;     // BC1 = 1 for latch or read
+BDIR => {
+  data_io & !read_io;
+};
+
+BC1 => {
+  latch_io # read_io;
+};
 
 /* ---------- OUTPUT ENABLE CONTROL ---------- */
 BDIR.OE     = data_io # read_io;
 BC1.OE      = latch_io # read_io;
-CLK_OUT.OE  = 1;
 CLK_DIV2.OE = 1;
 
-/* ---------- CLOCK OUTPUTS ---------- */
-CLK_OUT = CLK_IN;
-
+/* ---------- CLOCK DIVIDE-BY-2 ---------- */
 CLK_DIV2.CLK = CLK_IN;
-CLK_DIV2.D   = !CLK_DIV2.Q;
+CLK_DIV2 => {
+  !CLK_DIV2.Q;
+};
 ```
-
 ---
 
 ## 🧮 ZXEightyZON Truth Table – Bus Inputs vs Control & Clock Outputs
