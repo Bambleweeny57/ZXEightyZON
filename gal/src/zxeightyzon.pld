@@ -1,61 +1,90 @@
-Name ZXEightyZON;
-PartNo Rev1.0;
-Date 20/10/2025;
-Revision 01;
+Name     ZXEightyZON;
+PartNo   01;
+Date     22/10/2025;
+Revision 1.0;
 Designer Jonathan Gratton;
-Company AY-ZONIC;
+Company  AY-ZONIC;
 Assembly ZXEightyZON;
-Location Wakefield;
-Device g16v8ma;
+Location U2;
+Device   G22V10;
 
-/* ---------- PIN DEFINITIONS ---------- */
-//PIN 01 = CLK;
-PIN 02 = A0;
-PIN 03 = A1;
-PIN 04 = A2;
-PIN 05 = A3;
-PIN 06 = A4;
-PIN 07 = A5;
-PIN 08 = A6;
-PIN 09 = A7;
-//PIN 10 = GND;
-//PIN 11 = NC;
-PIN 12 = Q;
-PIN 13 = WR_N;
-PIN 14 = RD_N;
-PIN 15 = IORQ_N;
-PIN 16 = BDIR;
-PIN 17 = BC1;
-PIN 18 = CLK_OUT;
-//PIN 19 = CLK_DIV2;
-//PIN 20 = VCC;
+/* ---------- PIN DEFINITIONS (Mode 3) ---------- */
+PIN 1  = CLK_IN;
+PIN 2  = A0;
+PIN 3  = A1;
+PIN 4  = A2;
+PIN 5  = A3;
+PIN 6  = A4;
+PIN 7  = A5;
+PIN 8  = A6;
+PIN 9  = A7;
+PIN 10 = WR_N;
+PIN 11 = IORQ_N;
+PIN 13 = RD_N;
 
-/* ---------- OPERATION DECODING ---------- */
+PIN 14 = BDIR;
+PIN 15 = BC1;
+PIN 17 = CLK_DIV2;
 
-/* -------- REGISTER SELECT (LATCH) -------- */
+/* ---------- INTERNAL LOGIC SIGNALS ----------*/ 
+//BOOLEAN latch_io; /* ---------- CAUSES COMPILE ERROR ---------- */
+//BOOLEAN data_io;  /* ---------- CAUSES COMPILE ERROR ---------- */
+//BOOLEAN read_io;  /* ---------- CAUSES COMPILE ERROR ---------- */
+
+
+/* ---------- ZONX ADDRESS DECODING ---------- */
+
+// -------- REGISTER SELECT (LATCH) --------
+// Modified ZONX latch (AY-ZONIC variant)
+ADDR_LATCH1 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
+// Original ZONX latch (Sinclair-era mapping)
+ADDR_LATCH2 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
+// Manual variant latch (custom override)
+ADDR_LATCH3 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
+// Additional combination latch (AY-ZONIC fallback)
+ADDR_LATCH4 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
+
 latch_io = !IORQ_N & !WR_N & RD_N & (
-  (!A7 &  A6 &  A5 &  A4 &  A3 &  A2 &  A1 &  A0) #  /* 0xDF */
-  (!A7 &  A6 &  A5 & !A4 &  A3 &  A2 &  A1 &  A0)    /* 0xCF */
+  ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
 );
 
-/* -------- DATA WRITE -------- */
+// -------- DATA WRITE --------
+// Modified ZONX data write (AY-ZONIC variant)
+ADDR_DATA1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Original ZONX data write (Sinclair-era mapping)
+ADDR_DATA2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+// Manual variant data write (custom override)
+ADDR_DATA3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Additional combination data write (AY-ZONIC fallback)
+ADDR_DATA4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+
 data_io = !IORQ_N & !WR_N & RD_N & (
-  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
-  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
+  ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
 );
 
-/* -------- DATA READ -------- */
+// -------- DATA READ --------
+// Modified ZONX data read (AY-ZONIC variant)
+ADDR_READ1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Original ZONX data read (Sinclair-era mapping)
+ADDR_READ2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+// Manual variant data read (custom override)
+ADDR_READ3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Additional combination data read (AY-ZONIC fallback)
+ADDR_READ4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+
 read_io = !IORQ_N & !RD_N & WR_N & (
-  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
-  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
+  ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
 );
 
 /* ---------- CONTROL SIGNALS ---------- */
 BDIR = data_io & !read_io;
 BC1  = latch_io # read_io;
 
-/* ---------- CLOCK OUTPUTS ---------- */
-//CLK_OUT = CLK;
-//Q.D = !Q;
-//CLK_DIV2.CLK = CLK_IN;
-//CLK_DIV2.D   = !CLK_DIV2;
+/* ---------- OUTPUT ENABLE CONTROL ---------- */
+//BDIR.OE     = data_io # read_io;   /* ---------- CAUSES COMPILE ERROR ---------- */
+//BC1.OE      = latch_io # read_io;  /* ---------- CAUSES COMPILE ERROR ---------- */
+//CLK_DIV2.OE = 1;
+
+/* ---------- CLOCK DIVIDE-BY-2 ---------- */
+//CLK_DIV2.CLK = CLK_IN;  /* ---------- CAUSES COMPILE ERROR ---------- */
+//CLK_DIV2     = !CLK_DIV2.Q;  /* ---------- CAUSES COMPILE ERROR ---------- */
