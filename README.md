@@ -93,11 +93,6 @@ PIN 14 = BDIR;
 PIN 15 = BC1;
 PIN 17 = CLK_DIV2;
 
-/* ---------- INTERNAL LOGIC SIGNALS ---------- */
-BOOLEAN latch_io;
-BOOLEAN data_io;
-BOOLEAN read_io;
-
 /* ---------- ZONX ADDRESS DECODING ---------- */
 
 // -------- REGISTER SELECT (LATCH) --------
@@ -143,17 +138,11 @@ read_io = !IORQ_N & !RD_N & WR_N & (
 );
 
 /* ---------- CONTROL SIGNALS ---------- */
-BDIR => data_io & !read_io;
-BC1  => latch_io # read_io;
-
-/* ---------- OUTPUT ENABLE CONTROL ---------- */
-BDIR.OE     = data_io # read_io;
-BC1.OE      = latch_io # read_io;
-CLK_DIV2.OE = 1;
+BDIR = data_io & !read_io;
+BC1 = latch_io # read_io;
 
 /* ---------- CLOCK DIVIDE-BY-2 ---------- */
-CLK_DIV2.CLK = CLK_IN;
-CLK_DIV2     => !CLK_DIV2.Q;
+CLK_DIV2 = CLK_DIV2 $ !CLK_IN;
 ```
 ---
 
