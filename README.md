@@ -99,28 +99,34 @@ FIELD Addr = [A7..A0];
 /* ---------- ZONX ADDRESS DECODING ---------- */
 
 // -------- REGISTER SELECT (LATCH) --------
-addr_latch1 = (!A7 &  A6 &  A5 &  A4 &  A3 &  A2 &  A1 &  A0);  // 0xDF
-addr_latch2 = (!A7 &  A6 &  A5 & !A4 &  A3 &  A2 &  A1 &  A0);  // 0xCF
+ADDR_LATCH1 = Addr == H'DF';  // [1] Modified ZONX latch
+ADDR_LATCH2 = Addr == H'CF';  // [2] Original ZONX latch
+ADDR_LATCH3 = Addr == H'EF';  // [3] Manual variant latch
+ADDR_LATCH4 = Addr == H'FF';  // [4] Additional combination latch
 
-latch_io = {
-  !IORQ_N & !WR_N & RD_N & (addr_latch1 # addr_latch2);
-};
+latch_io = !IORQ_N & !WR_N & RD_N & (
+  ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
+);
 
-/* -------- DATA WRITE -------- */
-addr_data1 = (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0);  // 0x0F
-addr_data2 = (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0);  // 0x1F
+// -------- DATA WRITE --------
+ADDR_DATA1 = Addr == H'0F';  // [1] Modified ZONX data
+ADDR_DATA2 = Addr == H'1F';  // [2] Original ZONX data
+ADDR_DATA3 = Addr == H'2F';  // [3] Manual variant data
+ADDR_DATA4 = Addr == H'3F';  // [4] Additional combination data
 
-data_io = {
-  !IORQ_N & !WR_N & RD_N & (addr_data1 # addr_data2);
-};
+data_io = !IORQ_N & !WR_N & RD_N & (
+  ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
+);
 
-/* -------- DATA READ -------- */
-addr_read1 = (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0);  // 0x0F
-addr_read2 = (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0);  // 0x1F
+// -------- DATA READ --------
+ADDR_READ1 = Addr == H'0F';  // [1] Modified ZONX data read
+ADDR_READ2 = Addr == H'1F';  // [2] Original ZONX data read
+ADDR_READ3 = Addr == H'2F';  // [3] Manual variant data read
+ADDR_READ4 = Addr == H'3F';  // [4] Additional combination data read
 
-read_io = {
-  !IORQ_N & !RD_N & WR_N & (addr_read1 # addr_read2);
-};
+read_io = !IORQ_N & !RD_N & WR_N & (
+  ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
+);
 
 /* ---------- CONTROL SIGNALS ---------- */
 BDIR => {
@@ -140,6 +146,7 @@ CLK_DIV2.OE = 1;
 CLK_DIV2.CLK = CLK_IN;
 CLK_DIV2 => {
   !CLK_DIV2.Q;
+};
 };
 ```
 
