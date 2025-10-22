@@ -3,90 +3,125 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 1
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Mon Oct 20 05:07:40 2025
+Created Wed Oct 22 10:44:00 2025
 
-  1:Name ZXEightyZON;
-  2:PartNo Rev1.0;
-  3:Date 20/10/2025;
-  4:Revision 01;
+  1:Name     ZXEightyZON;
+  2:PartNo   01;
+  3:Date     22/10/2025;
+  4:Revision 1.0;
   5:Designer Jonathan Gratton;
-  6:Company AY-ZONIC;
+  6:Company  AY-ZONIC;
   7:Assembly ZXEightyZON;
-  8:Location Wakefield;
-  9:Device g16v8ma;
+  8:Location U2;
+  9:Device   G22V10;
  10:
- 11:/* ---------- PIN DEFINITIONS ---------- */
- 12://PIN 01 = CLK;
+ 11:/* ---------- PIN DEFINITIONS (Mode 3) ---------- */
+ 12:PIN 1  = CLK_IN;
+ 13:PIN 2  = A0;
+ 14:PIN 3  = A1;
+ 15:PIN 4  = A2;
+ 16:PIN 5  = A3;
+ 17:PIN 6  = A4;
+ 18:PIN 7  = A5;
+ 19:PIN 8  = A6;
+ 20:PIN 9  = A7;
+ 21:PIN 10 = WR_N;
+ 22:PIN 11 = IORQ_N;
+ 23:PIN 13 = RD_N;
+ 24:
+ 25:PIN 14 = BDIR;
+ 26:PIN 15 = BC1;
+ 27:PIN 17 = CLK_DIV2;
+ 28:
+ 29:/* ---------- ZONX ADDRESS DECODING ---------- */
+ 30:
+ 31:// -------- REGISTER SELECT (LATCH) --------
 
- 13:PIN 02 = A0;
- 14:PIN 03 = A1;
- 15:PIN 04 = A2;
- 16:PIN 05 = A3;
- 17:PIN 06 = A4;
- 18:PIN 07 = A5;
- 19:PIN 08 = A6;
- 20:PIN 09 = A7;
- 21://PIN 10 = GND;
+ 32:// Modified ZONX latch (AY-ZONIC variant)
 
- 22://PIN 11 = NC;
+ 33:ADDR_LATCH1 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
 
- 23:PIN 12 = Q;
- 24:PIN 13 = WR_N;
- 25:PIN 14 = RD_N;
- 26:PIN 15 = IORQ_N;
- 27:PIN 16 = BDIR;
- 28:PIN 17 = BC1;
- 29:PIN 18 = CLK_OUT;
- 30://PIN 19 = CLK_DIV2;
+ 34:// Original ZONX latch (Sinclair-era mapping)
 
- 31://PIN 20 = VCC;
+ 35:ADDR_LATCH2 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
 
- 32:
- 33:/* ---------- OPERATION DECODING ---------- */
- 34:
- 35:/* -------- REGISTER SELECT (LATCH) -------- */
- 36:latch_io = !IORQ_N & !WR_N & RD_N & (
- 37:  (!A7 &  A6 &  A5 &  A4 &  A3 &  A2 &  A1 &  A0) #  /* 0xDF */
- 38:  (!A7 &  A6 &  A5 & !A4 &  A3 &  A2 &  A1 &  A0)    /* 0xCF */
- 39:);
+ 36:// Manual variant latch (custom override)
+
+ 37:ADDR_LATCH3 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
+
+ 38:// Additional combination latch (AY-ZONIC fallback)
+
+ 39:ADDR_LATCH4 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
+
  40:
- 41:/* -------- DATA WRITE -------- */
- 42:data_io = !IORQ_N & !WR_N & RD_N & (
- 43:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
- 44:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
- 45:);
- 46:
- 47:/* -------- DATA READ -------- */
- 48:read_io = !IORQ_N & !RD_N & WR_N & (
- 49:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 & !A1 &  A0) #  /* 0x0F */
- 50:  (!A7 & !A6 & !A5 & !A4 & !A3 & !A2 &  A1 &  A0)    /* 0x1F */
- 51:);
- 52:
- 53:/* ---------- CONTROL SIGNALS ---------- */
+ 41:latch_io = !IORQ_N & !WR_N & RD_N & (
+ 42:  ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
+ 43:);
+ 44:
+ 45:// -------- DATA WRITE --------
+
+ 46:// Modified ZONX data write (AY-ZONIC variant)
+
+ 47:ADDR_DATA1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+
+ 48:// Original ZONX data write (Sinclair-era mapping)
+
+ 49:ADDR_DATA2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+
+ 50:// Manual variant data write (custom override)
+
+ 51:ADDR_DATA3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+
+ 52:// Additional combination data write (AY-ZONIC fallback)
+
+ 53:ADDR_DATA4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+
 
 LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 2
 
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Mon Oct 20 05:07:40 2025
+Created Wed Oct 22 10:44:00 2025
 
- 54:BDIR = data_io & !read_io;
- 55:BC1  = latch_io # read_io;
- 56:
- 57:/* ---------- CLOCK OUTPUTS ---------- */
- 58://CLK_OUT = CLK;
+ 54:
+ 55:data_io = !IORQ_N & !WR_N & RD_N & (
+ 56:  ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
+ 57:);
+ 58:
+ 59:// -------- DATA READ --------
 
- 59://Q.D = !Q;
+ 60:// Modified ZONX data read (AY-ZONIC variant)
 
- 60://CLK_DIV2.CLK = CLK_IN;
+ 61:ADDR_READ1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
 
- 61://CLK_DIV2.D   = !CLK_DIV2;
+ 62:// Original ZONX data read (Sinclair-era mapping)
 
- 62:
- 63:
+ 63:ADDR_READ2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+
+ 64:// Manual variant data read (custom override)
+
+ 65:ADDR_READ3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+
+ 66:// Additional combination data read (AY-ZONIC fallback)
+
+ 67:ADDR_READ4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+
+ 68:
+ 69:read_io = !IORQ_N & !RD_N & WR_N & (
+ 70:  ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
+ 71:);
+ 72:
+ 73:/* ---------- CONTROL SIGNALS ---------- */
+ 74:BDIR = data_io & !read_io;
+ 75:BC1 = latch_io # read_io;
+ 76:
+ 77:/* ---------- CLOCK DIVIDE-BY-2 ---------- */
+ 78:CLK_DIV2 = CLK_DIV2 $ !CLK_IN;
+ 79:
+ 80:
 
 
 
-Jedec Fuse Checksum       (1d0f)
-Jedec Transmit Checksum   (a7ca)
+Jedec Fuse Checksum       (2bea)
+Jedec Transmit Checksum   (d469)

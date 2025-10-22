@@ -4,36 +4,76 @@
 *******************************************************************************
 
 CUPL(WM)        5.0a Serial# MW-10400000
-Device          g16v8ma  Library DLIB-h-40-8
-Created         Mon Oct 20 05:07:41 2025
+Device          g22v10  Library DLIB-h-40-1
+Created         Wed Oct 22 10:44:00 2025
 Name            ZXEightyZON
-Partno          Rev1.0
-Revision        01
-Date            20/10/2025
+Partno          01
+Revision        1.0
+Date            22/10/2025
 Designer        Jonathan Gratton
 Company         AY-ZONIC
 Assembly        ZXEightyZON
-Location        Wakefield
+Location        U2
 
 ===============================================================================
                             Expanded Product Terms
 ===============================================================================
 
+ADDR_DATA1 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
+
+ADDR_DATA2 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
+
+ADDR_DATA3 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
+
+ADDR_DATA4 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
+
+ADDR_LATCH1 =>
+    !A0 & !A1 & !A2 & A3 & A4 & !A5 & A6 & A7
+
+ADDR_LATCH2 =>
+    !A0 & !A1 & !A2 & A3 & !A4 & !A5 & A6 & A7
+
+ADDR_LATCH3 =>
+    !A0 & !A1 & !A2 & A3 & !A4 & !A5 & A6 & A7
+
+ADDR_LATCH4 =>
+    !A0 & !A1 & !A2 & A3 & A4 & !A5 & A6 & A7
+
+ADDR_READ1 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
+
+ADDR_READ2 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
+
+ADDR_READ3 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
+
+ADDR_READ4 =>
+    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
+
 BC1 =>
-    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & !RD_N & WR_N
-  # A0 & A1 & A2 & A3 & A5 & A6 & !A7 & !IORQ_N & RD_N & !WR_N
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & !RD_N & WR_N
+  # !A0 & !A1 & !A2 & A3 & !A5 & A6 & A7 & !IORQ_N & RD_N & !WR_N
 
 BDIR =>
-    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & RD_N & !WR_N
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & RD_N & !WR_N
+
+CLK_DIV2 =>
+    CLK_DIV2 & CLK_IN
+  # !CLK_DIV2 & !CLK_IN
 
 data_io =>
-    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & RD_N & !WR_N
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & RD_N & !WR_N
 
 latch_io =>
-    A0 & A1 & A2 & A3 & A5 & A6 & !A7 & !IORQ_N & RD_N & !WR_N
+    !A0 & !A1 & !A2 & A3 & !A5 & A6 & A7 & !IORQ_N & RD_N & !WR_N
 
 read_io =>
-    A0 & !A2 & !A3 & !A4 & !A5 & !A6 & !A7 & !IORQ_N & !RD_N & WR_N
+    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & !RD_N & WR_N
 
 BC1.oe  =>
     1 
@@ -41,14 +81,8 @@ BC1.oe  =>
 BDIR.oe  =>
     1 
 
-IORQ_N.oe  =>
-    0 
-
-RD_N.oe  =>
-    0 
-
-WR_N.oe  =>
-    0 
+CLK_DIV2.oe  =>
+    1 
 
 
 ===============================================================================
@@ -67,21 +101,31 @@ Pol   Name              Ext     Pin     Type     Used   Pterms  Level
     A5                          7        V        -       -       -     
     A6                          8        V        -       -       -     
     A7                          9        V        -       -       -     
-    BC1                         17       V        2       7       2     
-    BDIR                        16       V        1       7       2     
-    CLK_OUT                     18       V        -       -       -     
-    IORQ_N                      15       V        -       -       -     
-    Q                           12       V        -       -       -     
-    RD_N                        14       V        -       -       -     
-    WR_N                        13       V        -       -       -     
+    ADDR_DATA1                  0        I        1       -       -     
+    ADDR_DATA2                  0        I        1       -       -     
+    ADDR_DATA3                  0        I        1       -       -     
+    ADDR_DATA4                  0        I        1       -       -     
+    ADDR_LATCH1                 0        I        1       -       -     
+    ADDR_LATCH2                 0        I        1       -       -     
+    ADDR_LATCH3                 0        I        1       -       -     
+    ADDR_LATCH4                 0        I        1       -       -     
+    ADDR_READ1                  0        I        1       -       -     
+    ADDR_READ2                  0        I        1       -       -     
+    ADDR_READ3                  0        I        1       -       -     
+    ADDR_READ4                  0        I        1       -       -     
+    BC1                         15       V        2       10      2     
+    BDIR                        14       V        1       8       2     
+    CLK_DIV2                    17       V        2       14      2     
+    CLK_IN                      1        V        -       -       -     
+    IORQ_N                      11       V        -       -       -     
+    RD_N                        13       V        -       -       -     
+    WR_N                        10       V        -       -       -     
     data_io                     0        I        1       -       -     
     latch_io                    0        I        1       -       -     
     read_io                     0        I        1       -       -     
-    BC1                 oe      17       D        1       1       0     
-    BDIR                oe      16       D        1       1       0     
-    IORQ_N              oe      15       D        1       1       0     
-    RD_N                oe      14       D        1       1       0     
-    WR_N                oe      13       D        1       1       0     
+    BC1                 oe      15       D        1       1       0     
+    BDIR                oe      14       D        1       1       0     
+    CLK_DIV2            oe      17       D        1       1       0     
 
 
 LEGEND    D : default variable         F : field      G : group
@@ -94,80 +138,152 @@ LEGEND    D : default variable         F : field      G : group
                                    Fuse Plot
 ===============================================================================
 
-Syn   02192 - Ac0   02193 - 
+SP 
+ 05764 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
 
-Pin #19  02048  Pol x  02120  Ac1 - 
- 00000 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00032 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00064 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00096 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00128 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00160 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00192 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00224 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #18  02049  Pol x  02121  Ac1 - 
- 00256 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00288 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00320 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00352 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00384 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00416 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00448 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00480 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #17  02050  Pol -  02122  Ac1 - 
- 00512 -------------------------------- 
- 00544 x--------x---x---x-x-x-x-xx--x-- 
- 00576 x---x---x---x------xx-x-x--x-x-- 
- 00608 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00640 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00672 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00704 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00736 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #16  02051  Pol -  02123  Ac1 - 
- 00768 -------------------------------- 
- 00800 x--------x---x---x-x-xx--x-x-x-- 
- 00832 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00864 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00896 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00928 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00960 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00992 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #15  02052  Pol x  02124  Ac1 - 
- 01024 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01056 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01088 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01120 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01152 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01184 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01216 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01248 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #14  02053  Pol x  02125  Ac1 - 
- 01280 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01312 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01344 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01376 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01408 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01440 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01472 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01504 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #13  02054  Pol x  02126  Ac1 - 
- 01536 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01568 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01600 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01632 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01664 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01696 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01728 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01760 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #12  02055  Pol x  02127  Ac1 - 
- 01792 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01824 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01856 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01888 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01920 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01952 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01984 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 02016 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+AR 
+ 00000 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+
+Pin #23  05808 Mode  xx 
+ 00044 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00088 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00132 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00176 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00220 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00264 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00308 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00352 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00396 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #22  05810 Mode  xx 
+ 00440 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00484 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00528 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00572 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00616 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00660 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00704 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00748 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00792 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00836 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00880 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #21  05812 Mode  xx 
+ 00924 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 00968 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01012 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01056 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01100 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01144 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01188 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01232 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01276 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01320 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01364 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01408 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01452 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #20  05814 Mode  xx 
+ 01496 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01540 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01584 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01628 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01672 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01716 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01760 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01804 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01848 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01892 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01936 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 01980 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02024 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02068 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02112 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #19  05816 Mode  xx 
+ 02156 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02200 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02244 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02288 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02332 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02376 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02420 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02464 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02508 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02552 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02596 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02640 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02684 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02728 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02772 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02816 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02860 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #18  05818 Mode  xx 
+ 02904 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02948 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02992 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03036 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03080 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03124 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03168 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03212 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03256 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03300 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03344 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03388 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03432 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03476 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03520 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03564 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03608 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #17  05820 Mode  -- 
+ 03652 -------------------------------------------- 
+ 03696 x-------------------------x----------------- 
+ 03740 -x-------------------------x---------------- 
+ 03784 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03828 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03872 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03916 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 03960 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04004 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04048 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04092 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04136 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04180 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04224 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04268 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #16  05822 Mode  xx 
+ 04312 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04356 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04400 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04444 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04488 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04532 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04576 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04620 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04664 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04708 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04752 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04796 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 04840 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #15  05824 Mode  -- 
+ 04884 -------------------------------------------- 
+ 04928 ----x---x---x---x----x---x-------x--x----x-x 
+ 04972 -----x---x---x--x--------x--x---x----x---xx- 
+ 05016 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05060 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05104 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05148 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05192 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05236 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05280 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05324 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #14  05826 Mode  -- 
+ 05368 -------------------------------------------- 
+ 05412 ----x---x---x---x----x---x-------x---x---xx- 
+ 05456 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05500 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05544 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05588 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05632 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05676 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 05720 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
 
 
 LEGEND    X : fuse not blown 
@@ -179,15 +295,17 @@ LEGEND    X : fuse not blown
 
                                ______________
                               | ZXEightyZON  |
-                          x---|1           20|---x Vcc                      
-                       A0 x---|2           19|---x                          
-                       A1 x---|3           18|---x CLK_OUT                  
-                       A2 x---|4           17|---x BC1                      
-                       A3 x---|5           16|---x BDIR                     
-                       A4 x---|6           15|---x IORQ_N                   
-                       A5 x---|7           14|---x RD_N                     
-                       A6 x---|8           13|---x WR_N                     
-                       A7 x---|9           12|---x Q                        
-                      GND x---|10          11|---x                          
+                   CLK_IN x---|1           24|---x Vcc                      
+                       A0 x---|2           23|---x                          
+                       A1 x---|3           22|---x                          
+                       A2 x---|4           21|---x                          
+                       A3 x---|5           20|---x                          
+                       A4 x---|6           19|---x                          
+                       A5 x---|7           18|---x                          
+                       A6 x---|8           17|---x CLK_DIV2                 
+                       A7 x---|9           16|---x                          
+                     WR_N x---|10          15|---x BC1                      
+                   IORQ_N x---|11          14|---x BDIR                     
+                      GND x---|12          13|---x RD_N                     
                               |______________|
 
