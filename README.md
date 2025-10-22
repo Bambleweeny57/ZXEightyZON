@@ -99,30 +99,30 @@ FIELD Addr = [A7..A0];
 /* ---------- ZONX ADDRESS DECODING ---------- */
 
 // -------- REGISTER SELECT (LATCH) --------
-ADDR_LATCH1 = Addr == H'DF';  // [1] Modified ZONX latch
-ADDR_LATCH2 = Addr == H'CF';  // [2] Original ZONX latch
-ADDR_LATCH3 = Addr == H'EF';  // [3] Manual variant latch
-ADDR_LATCH4 = Addr == H'FF';  // [4] Additional combination latch
+ADDR_LATCH1 = Addr == H'DF';  // Modified ZONX latch
+ADDR_LATCH2 = Addr == H'CF';  // Original ZONX latch
+ADDR_LATCH3 = Addr == H'CF';  // Manual variant latch
+ADDR_LATCH4 = Addr == H'DF';  // Additional combination latch
 
 latch_io = !IORQ_N & !WR_N & RD_N & (
   ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
 );
 
 // -------- DATA WRITE --------
-ADDR_DATA1 = Addr == H'0F';  // [1] Modified ZONX data
-ADDR_DATA2 = Addr == H'1F';  // [2] Original ZONX data
-ADDR_DATA3 = Addr == H'2F';  // [3] Manual variant data
-ADDR_DATA4 = Addr == H'3F';  // [4] Additional combination data
+ADDR_DATA1 = Addr == H'0F';  // Modified ZONX data
+ADDR_DATA2 = Addr == H'1F';  // Original ZONX data
+ADDR_DATA3 = Addr == H'0F';  // Manual variant data
+ADDR_DATA4 = Addr == H'1F';  // Additional combination data
 
 data_io = !IORQ_N & !WR_N & RD_N & (
   ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
 );
 
 // -------- DATA READ --------
-ADDR_READ1 = Addr == H'0F';  // [1] Modified ZONX data read
-ADDR_READ2 = Addr == H'1F';  // [2] Original ZONX data read
-ADDR_READ3 = Addr == H'2F';  // [3] Manual variant data read
-ADDR_READ4 = Addr == H'3F';  // [4] Additional combination data read
+ADDR_READ1 = Addr == H'0F';  // Modified ZONX data read
+ADDR_READ2 = Addr == H'1F';  // Original ZONX data read
+ADDR_READ3 = Addr == H'0F';  // Manual variant data read
+ADDR_READ4 = Addr == H'1F';  // Additional combination data read
 
 read_io = !IORQ_N & !RD_N & WR_N & (
   ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
@@ -147,9 +147,7 @@ CLK_DIV2.CLK = CLK_IN;
 CLK_DIV2 => {
   !CLK_DIV2.Q;
 };
-};
 ```
-
 ---
 
 ## 🧮 ZXEightyZON Truth Table – Bus Inputs vs Control & Clock Outputs
