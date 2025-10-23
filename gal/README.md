@@ -2,7 +2,7 @@
 
 **Device:** GAL22V10  
 **Revision:** 1.0  
-**Designer:** Jonathan Gratton  
+**Designer:** Bambleweeny57  
 **Company:** AY-ZONIC  
 **Date:** 2025-10-22
 
@@ -14,7 +14,7 @@ This GAL logic handles address decoding and control signal generation for the ZX
 
 | Pin | Signal     | Description                          |
 |-----|------------|--------------------------------------|
-| 01  | CLK_IN     | Input clock                          |
+| 01  | CLK        | Input clock                          |
 | 02  | A0         | Address bit 0                        |
 | 03  | A1         | Address bit 1                        |
 | 04  | A2         | Address bit 2                        |
@@ -30,12 +30,10 @@ This GAL logic handles address decoding and control signal generation for the ZX
 | 14  | BDIR       | PSG control: data direction          |
 | 15  | BC1        | PSG control: register/data select    |
 | 16  | NC         | Not connected                        |
-| 17  | CLK_DIV2   | Divided clock output (toggle logic) |
-| 18  | NC         | Not connected                        |
+| 17  | CLK_DIV2   | Divided clock output (toggle logic)  |
+| 18  | CLK_OUT    | Clock Buffered passthrough           |             |
 | 19  | NC         | Not connected                        |
 | 20  | VCC        | Power                                |
-
-> Pins 12, 16, 18, and 19 are unused in this build but reserved for future expansion.
 
 ---
 
@@ -94,9 +92,14 @@ BDIR = data_io & !read_io;
 BC1  = latch_io # read_io;
 ```
 
+### 🔹 Clock Buffered Passthough
+```cupl
+CLK_OUT = CLK;
+```
+
 ### 🔹 Clock Divider Logic
 ```cupl
-CLK_DIV2 = CLK_DIV2 $ !CLK_IN;
+CLK_DIV2.D = !CLK_DIV2;
 ```
 
 ---
