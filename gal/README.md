@@ -3,7 +3,7 @@
 **Device:** GAL22V10  
 **Revision:** 1.0  
 **Designer:** Bambleweeny57  
-**Company:** AY-ZONIC  
+**Company:** Submeson Brain Corporation
 **Date:** 2025-10-22
 
 This GAL logic handles address decoding and control signal generation for the ZXEightyZON sound interface. It supports multiple ZON-X variants and provides clock division and PSG interfacing via BC1 and BDIR. All address combinations are explicitly decoded for builder clarity and remixability.
