@@ -2,7 +2,7 @@
 #
 # CUPL(WM)        5.0a Serial# MW-10400000
 # Device          g22v10  Library DLIB-h-40-1
-# Created         Wed Oct 22 14:16:41 2025
+# Created         Thu Oct 23 21:05:32 2025
 # Name            ZXEightyZON
 # Partno          01
 # Revision        1.0
@@ -14,19 +14,21 @@
 #
 # Inputs  1 A0 A1 A2 
 #         A3 A4 A5 A6 
-#         A7 BC1 BDIR CLK_DIV2 
-#         CLK_IN IORQ_N RD_N WR_N 
-# Outputs BC1 BDIR CLK_DIV2 BC1.oe 
-#         BDIR.oe CLK_DIV2.oe 
-.i 16
-.o 6
-.p 8
--111100-0----001 1~~~~~
--0001-011----010 1~~~~~
--111100-0----010 ~1~~~~
------------11--- ~~1~~~
------------00--- ~~1~~~
-1--------------- ~~~1~~
-1--------------- ~~~~1~
-1--------------- ~~~~~1
+#         A7 BC1 BDIR CLK 
+#         CLK_DIV2 CLK_OUT IORQ_N RD_N 
+#         WR_N 
+# Outputs BC1 BDIR CLK_DIV2.d CLK_OUT 
+#         BC1.oe BDIR.oe CLK_DIV2.oe CLK_OUT.oe 
+.i 17
+.o 8
+.p 9
+-111100-0-----001 1~~~~~~~
+-0001-011-----010 1~~~~~~~
+-111100-0-----010 ~1~~~~~~
+------------0---- ~~1~~~~~
+-----------1----- ~~~1~~~~
+1---------------- ~~~~1~~~
+1---------------- ~~~~~1~~
+1---------------- ~~~~~~1~
+1---------------- ~~~~~~~1
 .end
