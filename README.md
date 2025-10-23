@@ -73,7 +73,7 @@ Designer Jonathan Gratton;
 Company  AY-ZONIC;
 Assembly ZXEightyZON;
 Location U2;
-Device   GAL22V10;
+Device   G22V10;
 
 /* ---------- PIN DEFINITIONS (Mode 3) ---------- */
 PIN 1  = CLK_IN;
@@ -93,60 +93,56 @@ PIN 14 = BDIR;
 PIN 15 = BC1;
 PIN 17 = CLK_DIV2;
 
-/* ---------- ADDRESS FIELD ---------- */
-FIELD Addr = [A7..A0];
-
 /* ---------- ZONX ADDRESS DECODING ---------- */
 
 // -------- REGISTER SELECT (LATCH) --------
-ADDR_LATCH1 = Addr == H'DF';  // Modified ZONX latch
-ADDR_LATCH2 = Addr == H'CF';  // Original ZONX latch
-ADDR_LATCH3 = Addr == H'CF';  // Manual variant latch
-ADDR_LATCH4 = Addr == H'DF';  // Additional combination latch
+// Modified ZONX latch (AY-ZONIC variant)
+ADDR_LATCH1 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
+// Original ZONX latch (Sinclair-era mapping)
+ADDR_LATCH2 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
+// Manual variant latch (custom override)
+ADDR_LATCH3 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
+// Additional combination latch (AY-ZONIC fallback)
+ADDR_LATCH4 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
 
 latch_io = !IORQ_N & !WR_N & RD_N & (
   ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
 );
 
 // -------- DATA WRITE --------
-ADDR_DATA1 = Addr == H'0F';  // Modified ZONX data
-ADDR_DATA2 = Addr == H'1F';  // Original ZONX data
-ADDR_DATA3 = Addr == H'0F';  // Manual variant data
-ADDR_DATA4 = Addr == H'1F';  // Additional combination data
+// Modified ZONX data write (AY-ZONIC variant)
+ADDR_DATA1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Original ZONX data write (Sinclair-era mapping)
+ADDR_DATA2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+// Manual variant data write (custom override)
+ADDR_DATA3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Additional combination data write (AY-ZONIC fallback)
+ADDR_DATA4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
 
 data_io = !IORQ_N & !WR_N & RD_N & (
   ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
 );
 
 // -------- DATA READ --------
-ADDR_READ1 = Addr == H'0F';  // Modified ZONX data read
-ADDR_READ2 = Addr == H'1F';  // Original ZONX data read
-ADDR_READ3 = Addr == H'0F';  // Manual variant data read
-ADDR_READ4 = Addr == H'1F';  // Additional combination data read
+// Modified ZONX data read (AY-ZONIC variant)
+ADDR_READ1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Original ZONX data read (Sinclair-era mapping)
+ADDR_READ2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
+// Manual variant data read (custom override)
+ADDR_READ3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
+// Additional combination data read (AY-ZONIC fallback)
+ADDR_READ4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
 
 read_io = !IORQ_N & !RD_N & WR_N & (
   ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
 );
 
 /* ---------- CONTROL SIGNALS ---------- */
-BDIR => {
-  data_io & !read_io;
-};
-
-BC1 => {
-  latch_io # read_io;
-};
-
-/* ---------- OUTPUT ENABLE CONTROL ---------- */
-BDIR.OE     = data_io # read_io;
-BC1.OE      = latch_io # read_io;
-CLK_DIV2.OE = 1;
+BDIR = data_io & !read_io;
+BC1 = latch_io # read_io;
 
 /* ---------- CLOCK DIVIDE-BY-2 ---------- */
-CLK_DIV2.CLK = CLK_IN;
-CLK_DIV2 => {
-  !CLK_DIV2.Q;
-};
+CLK_DIV2 = CLK_DIV2 $ !CLK_IN;
 ```
 ---
 
