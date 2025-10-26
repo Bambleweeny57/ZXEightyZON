@@ -135,4 +135,4 @@ This GAL logic is part of the **ZXEightyZON** sound interface, enabling compatib
 
 ## 🧬 Lore Tag
 
-> “Designed by Jonathan Gratton for AY-ZONIC, where builder clarity meets retro fidelity.”
+> “Designed by Bambleweeny57 for Submeson Brain Company, where builder clarity meets retro fidelity.”
