@@ -66,17 +66,30 @@
 
 ---
 
-## 🧮 ZXEightyZON Truth Table – Bus Inputs vs Control & Clock Outputs
+### 🧮 ZXEightyZON Truth Table – ZON-X Address Variants vs PSG Control Signals
 
-| `/IORQ` | `/WR` | `/RD` | `Addr` Match  | Operation     | BDIR | BC1 | CLK_OUT | CLK_DIV2 |
-|---------|-------|-------|---------------|---------------|------|-----|---------|----------|
-| Low     | Low   | High  | `0xDF`        | Latch         | 1    | 1   | CLK     | ÷2       |
-| Low     | Low   | High  | `0xCF`        | Latch         | 1    | 1   | CLK     | ÷2       |
-| Low     | Low   | High  | `0x0F`        | Data Write    | 1    | 0   | CLK     | ÷2       |
-| Low     | Low   | High  | `0x1F`        | Data Write    | 1    | 0   | CLK     | ÷2       |
-| Low     | High  | Low   | `0x0F`        | Data Read     | 0    | 1   | CLK     | ÷2       |
-| Low     | High  | Low   | `0x1F`        | Data Read     | 0    | 1   | CLK     | ÷2       |
-| Any     | Any   | Any   | No match      | No operation  | 0    | 0   | CLK     | ÷2       |
+This table maps decoded ZON-X addresses and I/O control signals to PSG control outputs. Each variant is listed explicitly to reflect all known ZON-X mappings.
+
+| Variant             | /IORQ | /WR  | /RD  | Address | Operation     | BDIR | BC1 |
+|---------------------|:-----:|:----:|:----:|:-------:|:--------------|:----:|:---:|
+| Modified ZON-X      | Low   | Low  | High | 0xDF    | Latch         | 1    | 1   |
+| Modified ZON-X      | Low   | Low  | High | 0x0F    | Data Write    | 1    | 0   |
+| Modified ZON-X      | Low   | High | Low  | 0x0F    | Data Read     | 0    | 1   |
+| Original ZON-X      | Low   | Low  | High | 0xCF    | Latch         | 1    | 1   |
+| Original ZON-X      | Low   | Low  | High | 0x1F    | Data Write    | 1    | 0   |
+| Original ZON-X      | Low   | High | Low  | 0x1F    | Data Read     | 0    | 1   |
+| Manual Override      | Low   | Low  | High | 0xCF    | Latch         | 1    | 1   |
+| Manual Override      | Low   | Low  | High | 0x0F    | Data Write    | 1    | 0   |
+| Manual Override      | Low   | High | Low  | 0x0F    | Data Read     | 0    | 1   |
+| AY-ZONIC Fallback   | Low   | Low  | High | 0xDF    | Latch         | 1    | 1   |
+| AY-ZONIC Fallback   | Low   | Low  | High | 0x1F    | Data Write    | 1    | 0   |
+| AY-ZONIC Fallback   | Low   | High | Low  | 0x1F    | Data Read     | 0    | 1   |
+| —                   | Any   | Any  | Any  | —       | No Operation  | 0    | 0   |
+
+**Notes:**
+- `BDIR` and `BC1` follow PSG truth table conventions for register and data access.
+- Address variants are duplicated intentionally to reflect ZON-X lineage and contributor clarity.
+- This logic ensures compatibility with Sinclair-era demos and hardware, while supporting AY-ZONIC extensions.
 
 ---
 
