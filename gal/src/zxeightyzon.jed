@@ -1,7 +1,7 @@
 
 CUPL(WM)        5.0a  Serial# MW-10400000
 Device          g22v10  Library DLIB-h-40-1
-Created         Sun Oct 26 14:57:34 2025
+Created         Sun Oct 26 15:18:08 2025
 Name            ZXEightyZON
 Partno          01
 Revision        1.0
@@ -33,4 +33,4 @@ Location        U2
 *L05792 00000000000000000000000000111000
 *L05824 11110011000000110001000000000000
 *C3171
-*EA52
+*EA51
