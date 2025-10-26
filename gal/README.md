@@ -25,13 +25,13 @@ This GAL logic handles address decoding and control signal generation for the ZX
 | 09  | A7         | Address bit 7                        |
 | 10  | WR_N       | Active-low write signal              |
 | 11  | IORQ_N     | Active-low I/O request               |
-| 12  | NC         | Not connected                        |
+| 12  | GND        | Ground                               |
 | 13  | RD_N       | Active-low read signal               |
 | 14  | BDIR       | PSG control: data direction          |
 | 15  | BC1        | PSG control: register/data select    |
-| 16  | NC         | Not connected                        |
-| 17  | CLK_DIV2   | Divided clock output (toggle logic)  |
-| 18  | CLK_OUT    | Clock Buffered passthrough           |             |
+| 16  | CLK_DIV2   | Divided clock output (toggle logic)  |
+| 17  | CLK_OUT    | Clock Buffered passthrough           |
+| 18  | NC         | Not connected                        |
 | 19  | NC         | Not connected                        |
 | 20  | VCC        | Power                                |
 
