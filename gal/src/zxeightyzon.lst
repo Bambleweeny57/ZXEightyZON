@@ -3,14 +3,14 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 1
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Thu Oct 23 21:09:27 2025
+Created Sun Oct 26 14:57:33 2025
 
   1:Name     ZXEightyZON;
   2:PartNo   01;
   3:Date     22/10/2025;
   4:Revision 1.0;
   5:Designer Bambleweeny57;
-  6:Company  AY-ZONIC;
+  6:Company  Submeson Brain Corporation;
   7:Assembly ZXEightyZON;
   8:Location U2;
   9:Device   G22V10;
@@ -71,7 +71,7 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 2
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Thu Oct 23 21:09:27 2025
+Created Sun Oct 26 14:57:33 2025
 
  54:ADDR_DATA4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
 
@@ -115,4 +115,4 @@ Created Thu Oct 23 21:09:27 2025
 
 
 Jedec Fuse Checksum       (3171)
-Jedec Transmit Checksum   (e289)
+Jedec Transmit Checksum   (ea52)
