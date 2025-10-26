@@ -26,8 +26,8 @@
     - Eastern demos often mix **Channel C**
 - **Master Clock Selection**:
   - Jumper-based selection for either bus clock or divided-by-2 clock
-  - `CLK_OUT`: Buffered ZX81 bus clock (YM2149 SEL = 0)
-  - `CLK_DIV2`: Internally divided clock (YM2149 SEL = 1 or for AY-3-8912/8910)
+  - `CLK_OUT`: Buffered ZX81 bus clock (YM2149 SEL = GND)
+  - `CLK_DIV2`: Internally divided clock (YM2149 SEL = !GND)
 - **PSG Clock Divider Control**:
   - Jumper-based selection for whether PSG divides master clock or receives pre-divided clock
   - **Closed**: Connect YM2149 SEL to GND (PSG divides clock)
@@ -35,121 +35,37 @@
 
 ---
 
-## 📌 GAL22V10D Pin Assignment – ZXEightyZON Rev1.0
+## 📌 Pin Assignments (GAL22V10)
 
-| **Pin** | **Signal Name** | **Direction** | **Description**                          |
-|--------:|------------------|---------------|------------------------------------------|
-| 01      | `CLK_IN`         | Input         | System clock from ZX81                   |
-| 02      | `A0`             | Input         | Address line A0                          |
-| 03      | `A1`             | Input         | Address line A1                          |
-| 04      | `A2`             | Input         | Address line A2                          |
-| 05      | `A3`             | Input         | Address line A3                          |
-| 06      | `A4`             | Input         | Address line A4                          |
-| 07      | `A5`             | Input         | Address line A5                          |
-| 08      | `A6`             | Input         | Address line A6                          |
-| 09      | `A7`             | Input         | Address line A7                          |
-| 10      | `WR_N`           | Input         | Write strobe from ZX81                   |
-| 11      | `IORQ_N`         | Input         | I/O request from ZX81                    |
-| 12      | —                | —             | Unused (do not assign)                   |
-| 13      | `RD_N`           | Input         | Read strobe from ZX81                    |
-| 14      | `BDIR`           | Output        | PSG control line: bus direction          |
-| 15      | `BC1`            | Output        | PSG control line: chip select            |
-| 16      | —                | —             | Unused (available for future use)        |
-| 17      | `CLK_DIV2`       | Output        | Divided clock output (1.65 MHz)          |
-| 18–22   | —                | —             | Unused (left floating, compiler-safe)    |
-| 23      | —                | —             | Not used (internal logic only)           |
-| 24      | `VCC`            | —             | +5V power supply                         |
+| Pin | Signal     | Description                          |
+|-----|------------|--------------------------------------|
+| 01  | CLK        | Input clock                          |
+| 02  | A0         | Address bit 0                        |
+| 03  | A1         | Address bit 1                        |
+| 04  | A2         | Address bit 2                        |
+| 05  | A3         | Address bit 3                        |
+| 06  | A4         | Address bit 4                        |
+| 07  | A5         | Address bit 5                        |
+| 08  | A6         | Address bit 6                        |
+| 09  | A7         | Address bit 7                        |
+| 10  | WR_N       | Active-low write signal              |
+| 11  | IORQ_N     | Active-low I/O request               |
+| 12  | NC         | Not connected                        |
+| 13  | RD_N       | Active-low read signal               |
+| 14  | BDIR       | PSG control: data direction          |
+| 15  | BC1        | PSG control: register/data select    |
+| 16  | NC         | Not connected                        |
+| 17  | CLK_DIV2   | Divided clock output (toggle logic)  |
+| 18  | CLK_OUT    | Clock Buffered passthrough           |             |
+| 19  | NC         | Not connected                        |
+| 20  | VCC        | Power                                |
 
----
-
-## 🧮 GAL22V10 CUPL Code — ZXEightyZON Rev1.0
-
-```cupl
-Name     ZXEightyZON;
-PartNo   01;
-Date     22/10/2025;
-Revision 1.0;
-Designer Jonathan Gratton;
-Company  AY-ZONIC;
-Assembly ZXEightyZON;
-Location U2;
-Device   G22V10;
-
-/* ---------- PIN DEFINITIONS (Mode 3) ---------- */
-PIN 1  = CLK_IN;
-PIN 2  = A0;
-PIN 3  = A1;
-PIN 4  = A2;
-PIN 5  = A3;
-PIN 6  = A4;
-PIN 7  = A5;
-PIN 8  = A6;
-PIN 9  = A7;
-PIN 10 = WR_N;
-PIN 11 = IORQ_N;
-PIN 13 = RD_N;
-
-PIN 14 = BDIR;
-PIN 15 = BC1;
-PIN 17 = CLK_DIV2;
-
-/* ---------- ZONX ADDRESS DECODING ---------- */
-
-// -------- REGISTER SELECT (LATCH) --------
-// Modified ZONX latch (AY-ZONIC variant)
-ADDR_LATCH1 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
-// Original ZONX latch (Sinclair-era mapping)
-ADDR_LATCH2 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
-// Manual variant latch (custom override)
-ADDR_LATCH3 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
-// Additional combination latch (AY-ZONIC fallback)
-ADDR_LATCH4 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
-
-latch_io = !IORQ_N & !WR_N & RD_N & (
-  ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
-);
-
-// -------- DATA WRITE --------
-// Modified ZONX data write (AY-ZONIC variant)
-ADDR_DATA1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-// Original ZONX data write (Sinclair-era mapping)
-ADDR_DATA2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-// Manual variant data write (custom override)
-ADDR_DATA3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-// Additional combination data write (AY-ZONIC fallback)
-ADDR_DATA4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-
-data_io = !IORQ_N & !WR_N & RD_N & (
-  ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
-);
-
-// -------- DATA READ --------
-// Modified ZONX data read (AY-ZONIC variant)
-ADDR_READ1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-// Original ZONX data read (Sinclair-era mapping)
-ADDR_READ2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-// Manual variant data read (custom override)
-ADDR_READ3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-// Additional combination data read (AY-ZONIC fallback)
-ADDR_READ4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-
-read_io = !IORQ_N & !RD_N & WR_N & (
-  ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
-);
-
-/* ---------- CONTROL SIGNALS ---------- */
-BDIR = data_io & !read_io;
-BC1 = latch_io # read_io;
-
-/* ---------- CLOCK DIVIDE-BY-2 ---------- */
-CLK_DIV2 = CLK_DIV2 $ !CLK_IN;
-```
 ---
 
 ## 🧮 ZXEightyZON Truth Table – Bus Inputs vs Control & Clock Outputs
 
-| `/IORQ` | `/WR` | `/RD` | `Addr` Match | Operation     | BDIR | BC1 | CLK_OUT | CLK_DIV2 |
-|---------|-------|-------|--------------|---------------|------|-----|---------|----------|
+| `/IORQ` | `/WR` | `/RD` | `Addr` Match  | Operation     | BDIR | BC1 | CLK_OUT | CLK_DIV2 |
+|---------|-------|-------|---------------|---------------|------|-----|---------|----------|
 | Low     | Low   | High  | `0xDF`        | Latch         | 1    | 1   | CLK     | ÷2       |
 | Low     | Low   | High  | `0xCF`        | Latch         | 1    | 1   | CLK     | ÷2       |
 | Low     | Low   | High  | `0x0F`        | Data Write    | 1    | 0   | CLK     | ÷2       |
@@ -162,9 +78,10 @@ CLK_DIV2 = CLK_DIV2 $ !CLK_IN;
 
 ## 🎛️ Stereo Jumper Logic
 
-| Jumper Setting | Mixed Channel | Left Output | Right Output |
+| Jumper Setting | Mixed Channel  | Left Output | Right Output |
 |----------------|----------------|-------------|--------------|
 | Jumper = B     | Channel B      | Channel A   | Channel C    |
 | Jumper = C     | Channel C      | Channel A   | Channel B    |
 
 > Default jumper = B (Western demos)
+> Jumper = C (Eastern demos)
