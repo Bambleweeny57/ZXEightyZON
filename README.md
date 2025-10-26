@@ -58,7 +58,11 @@
 | 17  | CLK_OUT    | Clock Buffered passthrough           |
 | 18  | NC         | Not connected                        |
 | 19  | NC         | Not connected                        |
-| 20  | VCC        | Power                                |
+| 20  | NC         | Not connected                        |
+| 21  | NC         | Not connected                        |
+| 22  | NC         | Not connected                        |
+| 23  | NC         | Not connected                        |
+| 24  | VCC        | Power                                |
 
 ---
 
