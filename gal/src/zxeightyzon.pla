@@ -2,20 +2,20 @@
 #
 # CUPL(WM)        5.0a Serial# MW-10400000
 # Device          g22v10  Library DLIB-h-40-1
-# Created         Sun Oct 26 16:20:20 2025
+# Created         Mon Oct 27 09:45:00 2025
 # Name            ZXEightyZON
-# Partno          01
+# Partno          GAL22V10C
 # Revision        1.0
 # Date            22/10/2025
 # Designer        Bambleweeny57
-# Company         Submeson Brain Corporation
+# Company         AY-ZONIC
 # Assembly        ZXEightyZON
 # Location        U2
 #
 # Inputs  1 A0 A1 A2 
 #         A3 A4 A5 A6 
-#         A7 BC1 BDIR CLK 
-#         CLK_DIV2 CLK_OUT IORQ_N RD_N 
+#         A7 BC1 BDIR CLK_DIV2 
+#         CLK_IN CLK_OUT IORQ_N RD_N 
 #         WR_N 
 # Outputs BC1 BDIR CLK_DIV2.d CLK_OUT 
 #         BC1.oe BDIR.oe CLK_DIV2.oe CLK_OUT.oe 
@@ -25,8 +25,8 @@
 -111100-0-----001 1~~~~~~~
 -0001-011-----010 1~~~~~~~
 -111100-0-----010 ~1~~~~~~
-------------0---- ~~1~~~~~
------------1----- ~~~1~~~~
+-----------0----- ~~1~~~~~
+------------1---- ~~~1~~~~
 1---------------- ~~~~1~~~
 1---------------- ~~~~~1~~
 1---------------- ~~~~~~1~

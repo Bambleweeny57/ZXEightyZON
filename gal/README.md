@@ -14,7 +14,7 @@ This GAL logic handles address decoding and control signal generation for the ZX
 
 | Pin | Signal     | Description                          |
 |-----|------------|--------------------------------------|
-| 01  | CLK        | Input clock                          |
+| 01  | CLK_IN     | Input clock                          |
 | 02  | A0         | Address bit 0                        |
 | 03  | A1         | Address bit 1                        |
 | 04  | A2         | Address bit 2                        |
@@ -43,12 +43,12 @@ This GAL logic handles address decoding and control signal generation for the ZX
 
 ## 🧩 ZON-X Variant Address Combinations
 
-| Variant Name            | Latch Address | Data Address | Notes                                                  |
-|-------------------------|---------------|--------------|--------------------------------------------------------|
-| Modified ZON-X          | 0xDF          | 0x0F         | AY-ZONIC decoding logic for expanded compatibility     |
-| Original ZON-X          | 0xCF          | 0x1F         | Matches legacy ZON-X hardware                          |
-| Manual Variant          | 0xCF          | 0x0F         | Hybrid logic for manual PSG control                    |
-| Additional Combination  | 0xDF          | 0x1F         | Alternate mapping for stereo or timing experiments     |
+| Variant Name            | Latch Address | Data Address |
+|-------------------------|---------------|--------------|
+| Modified ZON-X          | 0xDF          | 0x0F         |
+| Original ZON-X          | 0xCF          | 0x1F         |
+| Manual Variant          | 0xCF          | 0x0F         |
+| Additional Combination  | 0xDF          | 0x1F         |
 
 ---
 
@@ -98,14 +98,13 @@ BC1  = latch_io # read_io;
 
 ### 🔹 Clock Buffered Passthough
 ```cupl
-CLK_OUT = CLK;
+CLK_OUT = CLK_IN;
 ```
 
 ### 🔹 Clock Divider Logic
 ```cupl
 CLK_DIV2.D = !CLK_DIV2;
 ```
-
 ---
 
 ## 🔧 Build Instructions
@@ -113,7 +112,7 @@ CLK_DIV2.D = !CLK_DIV2;
 1. Edit `gal/src/zxeightyzon.cpl` as needed.
 2. Use VS Code task `"Compile ZXEightyZON GAL"` to generate `zxeightyzon.jed`.
 3. Use task `"Copy JEDEC to Build"` to move the file to `gal/build/`.
-4. Program the GAL22V10 using your programmer:
+4. Program the GAL22V10 using your programmer e.g.:
    - **T48** with XGPro
    - **Dataman Pro 40** with Dataman Control Software
 
@@ -122,7 +121,8 @@ CLK_DIV2.D = !CLK_DIV2;
 ## 🧪 Testing Notes
 
 - Use logic analyzer or LED rig to verify `BDIR` and `BC1` transitions.
-- Confirm clock division on `CLK_DIV2` matches expected toggle rate.
+- Confirm clock division on `CLK_DIV2` PIN 16 matches expected toggle rate.
+- Confirm clock on `CLK_OUT` PIN 17 matches `CLK_IN` on PIN 1.
 - Validate decoding against ZX81 bus activity and PSG response.
 
 ---

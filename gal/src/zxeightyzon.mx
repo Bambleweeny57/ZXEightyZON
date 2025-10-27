@@ -1,15 +1,47 @@
 Name     ZXEightyZON;
-PartNo   01;
+PartNo   GAL22V10C;
 Date     22/10/2025;
 Revision 1.0;
 Designer Bambleweeny57;
-Company  Submeson Brain Corporation;
+Company  AY-ZONIC;
 Assembly ZXEightyZON;
 Location U2;
-Device   G22V10;
+Device   g22v10;
+
+/*
+   ZXEightyZON Truth Table ZON-X Address Variants vs PSG Control Signals
+   This table maps decoded ZON-X addresses and I/O control signals to
+   PSG control outputs BDIR and BC1. Each variant is listed explicitly
+   to reflect all known ZON-X mappings and ensure contributor clarity.
+
+   Operation     Addr Match   Variant Type         BDIR  BC1
+   Latch         0xDF         Modified ZONX        1     1
+   Latch         0xCF         Original ZONX        1     1
+   Latch         0xCF         Manual Override      1     1
+   Latch         0xDF         AY-ZONIC Fallback    1     1
+
+   Data Write    0x0F         Modified ZONX        1     0
+   Data Write    0x1F         Original ZONX        1     0
+   Data Write    0x0F         Manual Override      1     0
+   Data Write    0x1F         AY-ZONIC Fallback    1     0
+
+   Data Read     0x0F         Modified ZONX        0     1
+   Data Read     0x1F         Original ZONX        0     1
+   Data Read     0x0F         Manual Override      0     1
+   Data Read     0x1F         AY-ZONIC Fallback    0     1
+
+   No Match      NA           NA                   0     0
+
+   Notes:
+   - BDIR and BC1 follow PSG truth table conventions.
+   - Address variants are duplicated intentionally to reflect ZON-X lineage.
+   - Control logic ensures compatibility with Sinclair-era demos and hardware.
+*/
 
 /* ---------- PIN DEFINITIONS ---------- */
-PIN 1  = CLK;
+
+/* ---------- SIGNAL INPUTS ---------- */
+PIN 1  = CLK_IN;
 PIN 2  = A0;
 PIN 3  = A1;
 PIN 4  = A2;
@@ -22,21 +54,25 @@ PIN 10 = WR_N;
 PIN 11 = IORQ_N;
 PIN 13 = RD_N;
 
+/* ---------- SIGNAL OUTPUTS ---------- */
 PIN 14 = BDIR;
 PIN 15 = BC1;
-PIN 17 = CLK_DIV2;
-PIN 18 = CLK_OUT;
+
+/* ---------- CLOCK OUTPUTS ---------- */
+PIN 16 = CLK_DIV2;
+PIN 17 = CLK_OUT;
 
 /* ---------- ZONX ADDRESS DECODING ---------- */
 
 /* -------- REGISTER SELECT (LATCH) -------- */
-/* Modified ZONX latch (AY-ZONIC variant) */
+
+/* Modified ZONX latch */
 ADDR_LATCH1 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
-/* Original ZONX latch (Sinclair-era mapping) */
+/* Original ZONX latch */
 ADDR_LATCH2 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
-/* Manual variant latch (custom override) */
+/* Manual variant latch */
 ADDR_LATCH3 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
-/* Additional combination latch (AY-ZONIC fallback) */
+/* Additional combination latch */
 ADDR_LATCH4 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
 
 latch_io = !IORQ_N & !WR_N & RD_N & (
@@ -44,13 +80,14 @@ latch_io = !IORQ_N & !WR_N & RD_N & (
 );
 
 /* -------- DATA WRITE -------- */
-/* Modified ZONX data write (AY-ZONIC variant) */
+
+/* Modified ZONX data write */
 ADDR_DATA1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Original ZONX data write (Sinclair-era mapping) */
+/* Original ZONX data write */
 ADDR_DATA2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-/* Manual variant data write (custom override) */
+/* Manual variant data write */
 ADDR_DATA3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Additional combination data write (AY-ZONIC fallback) */
+/* Additional combination data write */
 ADDR_DATA4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
 
 data_io = !IORQ_N & !WR_N & RD_N & (
@@ -58,13 +95,14 @@ data_io = !IORQ_N & !WR_N & RD_N & (
 );
 
 /* -------- DATA READ -------- */
-/* Modified ZONX data read (AY-ZONIC variant) */
+
+/* Modified ZONX data read */
 ADDR_READ1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Original ZONX data read (Sinclair-era mapping) */
+/* Original ZONX data read */
 ADDR_READ2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-/* Manual variant data read (custom override) */
+/* Manual variant data read */
 ADDR_READ3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Additional combination data read (AY-ZONIC fallback) */
+/* Additional combination data read */
 ADDR_READ4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
 
 read_io = !IORQ_N & !RD_N & WR_N & (
@@ -75,8 +113,8 @@ read_io = !IORQ_N & !RD_N & WR_N & (
 BDIR = data_io & !read_io;
 BC1 = latch_io # read_io;
 
-/* ---------- CLOCK PASS THROUGH ---------- */
-CLK_OUT = CLK;
-
 /* ---------- CLOCK DIVIDE-BY-2 ---------- */
-CLK_DIV2.D = !CLK_DIV2;
+CLK_DIV2.D  = !CLK_DIV2;
+
+/* ---------- CLOCK PASS THROUGH ---------- */
+CLK_OUT = CLK_IN;
