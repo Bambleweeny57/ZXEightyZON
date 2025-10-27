@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "gal"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"vs-cupl.MiniproOptionVcc": 0,
+		"vs-cupl.CuplDefinitions": "Atmel"
+	}
+}
