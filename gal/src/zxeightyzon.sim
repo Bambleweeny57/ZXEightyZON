@@ -9,9 +9,9 @@ PIN   8 =  A6
 PIN   9 =  A7 
 PIN  15 =  BC1 
 PIN  14 =  BDIR 
-PIN   1 =  CLK 
-PIN  17 =  CLK_DIV2 
-PIN  18 =  CLK_OUT 
+PIN  16 =  CLK_DIV2 
+PIN   1 =  CLK_IN 
+PIN  17 =  CLK_OUT 
 PIN  11 =  IORQ_N 
 PIN  13 =  RD_N 
 PIN  10 =  WR_N 
@@ -68,7 +68,7 @@ CLK_DIV2.d  =>
     CLK_DIV2
 
 CLK_OUT =>
-    CLK
+    CLK_IN
 
 data_io =>
     A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & RD_N & !WR_N
