@@ -5,13 +5,13 @@
 
 CUPL(WM)        5.0a Serial# MW-10400000
 Device          g22v10  Library DLIB-h-40-1
-Created         Sun Oct 26 16:20:20 2025
+Created         Mon Oct 27 09:45:00 2025
 Name            ZXEightyZON
-Partno          01
+Partno          GAL22V10C
 Revision        1.0
 Date            22/10/2025
 Designer        Bambleweeny57
-Company         Submeson Brain Corporation
+Company         AY-ZONIC
 Assembly        ZXEightyZON
 Location        U2
 
@@ -66,7 +66,7 @@ CLK_DIV2.d  =>
     !CLK_DIV2
 
 CLK_OUT =>
-    CLK
+    CLK_IN
 
 data_io =>
     A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & RD_N & !WR_N
@@ -120,10 +120,10 @@ Pol   Name              Ext     Pin     Type     Used   Pterms  Level
     ADDR_READ4                  0        I        1       -       -     
     BC1                         15       V        2       10      2     
     BDIR                        14       V        1       8       2     
-    CLK                         1        V        -       -       -     
-    CLK_DIV2                    17       V        -       -       -     
-    CLK_DIV2            d       17       X        1       14      2     
-    CLK_OUT                     18       V        1       16      2     
+    CLK_DIV2                    16       V        -       -       -     
+    CLK_DIV2            d       16       X        1       12      2     
+    CLK_IN                      1        V        -       -       -     
+    CLK_OUT                     17       V        1       14      2     
     IORQ_N                      11       V        -       -       -     
     RD_N                        13       V        -       -       -     
     WR_N                        10       V        -       -       -     
@@ -132,8 +132,8 @@ Pol   Name              Ext     Pin     Type     Used   Pterms  Level
     read_io                     0        I        1       -       -     
     BC1                 oe      15       D        1       1       0     
     BDIR                oe      14       D        1       1       0     
-    CLK_DIV2            oe      17       D        1       1       0     
-    CLK_OUT             oe      18       D        1       1       0     
+    CLK_DIV2            oe      16       D        1       1       0     
+    CLK_OUT             oe      17       D        1       1       0     
 
 
 LEGEND    D : default variable         F : field      G : group
@@ -222,9 +222,9 @@ Pin #19  05816 Mode  xx
  02772 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  02816 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  02860 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #18  05818 Mode  -- 
- 02904 -------------------------------------------- 
- 02948 x------------------------------------------- 
+Pin #18  05818 Mode  xx 
+ 02904 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+ 02948 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  02992 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  03036 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  03080 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
@@ -240,9 +240,9 @@ Pin #18  05818 Mode  --
  03520 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  03564 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  03608 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #17  05820 Mode  -x 
+Pin #17  05820 Mode  -- 
  03652 -------------------------------------------- 
- 03696 --------------------------x----------------- 
+ 03696 x------------------------------------------- 
  03740 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  03784 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  03828 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
@@ -256,9 +256,9 @@ Pin #17  05820 Mode  -x
  04180 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  04224 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  04268 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #16  05822 Mode  xx 
- 04312 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 04356 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #16  05822 Mode  -x 
+ 04312 -------------------------------------------- 
+ 04356 ------------------------------x------------- 
  04400 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  04444 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  04488 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
@@ -303,15 +303,15 @@ LEGEND    X : fuse not blown
 
                                ______________
                               | ZXEightyZON  |
-                      CLK x---|1           24|---x Vcc                      
+                   CLK_IN x---|1           24|---x Vcc                      
                        A0 x---|2           23|---x                          
                        A1 x---|3           22|---x                          
                        A2 x---|4           21|---x                          
                        A3 x---|5           20|---x                          
                        A4 x---|6           19|---x                          
-                       A5 x---|7           18|---x CLK_OUT                  
-                       A6 x---|8           17|---x CLK_DIV2                 
-                       A7 x---|9           16|---x                          
+                       A5 x---|7           18|---x                          
+                       A6 x---|8           17|---x CLK_OUT                  
+                       A7 x---|9           16|---x CLK_DIV2                 
                      WR_N x---|10          15|---x BC1                      
                    IORQ_N x---|11          14|---x BDIR                     
                       GND x---|12          13|---x RD_N                     
