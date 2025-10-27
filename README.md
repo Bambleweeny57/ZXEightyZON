@@ -39,7 +39,7 @@
 
 | Pin | Signal     | Description                          |
 |-----|------------|--------------------------------------|
-| 01  | CLK        | Input clock                          |
+| 01  | CLK_IN     | Input clock                          |
 | 02  | A0         | Address bit 0                        |
 | 03  | A1         | Address bit 1                        |
 | 04  | A2         | Address bit 2                        |
