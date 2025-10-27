@@ -3,7 +3,7 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 1
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Mon Oct 27 09:45:00 2025
+Created Mon Oct 27 10:31:57 2025
 
   1:Name     ZXEightyZON;
   2:PartNo   GAL22V10C;
@@ -64,7 +64,7 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 2
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Mon Oct 27 09:45:00 2025
+Created Mon Oct 27 10:31:57 2025
 
  54:PIN 11 = IORQ_N;
  55:PIN 13 = RD_N;
@@ -138,7 +138,7 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 3
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Mon Oct 27 09:45:00 2025
+Created Mon Oct 27 10:31:57 2025
 
 108:read_io = !IORQ_N & !RD_N & WR_N & (
 109:  ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
@@ -160,4 +160,4 @@ Created Mon Oct 27 09:45:00 2025
 
 
 Jedec Fuse Checksum       (347b)
-Jedec Transmit Checksum   (ec25)
+Jedec Transmit Checksum   (ec24)
