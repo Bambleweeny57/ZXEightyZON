@@ -139,5 +139,5 @@ This 2×2 jumper block allows manual swapping of **AY channels B and C** between
 - CH_B feeds Left + Right  
 - CH_C feeds Right-only
 
-> Virtical jumpers = B mixed, C right (Western demos)
+> Vertical jumpers = B mixed, C right (Western demos)
 > Horizontal jumpers = C mixed, B right (Eastern demos)
