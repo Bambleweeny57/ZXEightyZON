@@ -91,8 +91,6 @@ This table maps decoded ZON-X addresses and I/O control signals to PSG control o
 - Address variants are duplicated intentionally to reflect ZON-X lineage and contributor clarity.
 - This logic ensures compatibility with Sinclair-era demos and hardware, while supporting AY-ZONIC extensions.
 
---
-
  **Note on `RD` Signal Decoding:**  
 > The `RD` line is actively decoded in ZXEightyZON’s GAL logic for completeness and future compatibility. While no current ZON-X compatible software or demos utilize `RD`, its inclusion ensures accurate bus semantics and allows for potential future expansions (e.g., memory-mapped reads or refined timing control). Builders can treat it as provisioned but dormant — present in logic, unused in practice.
 
