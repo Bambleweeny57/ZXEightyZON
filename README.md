@@ -96,12 +96,46 @@ This table maps decoded ZON-X addresses and I/O control signals to PSG control o
 
 ---
 
-## 🎛️ Stereo Jumper Logic
+## 🎚️ AY Channel Assignment Jumper Block
 
-| Jumper Setting | Mixed Channel  | Left Output | Right Output |
-|----------------|----------------|-------------|--------------|
-| Jumper = B     | Channel B      | Channel A   | Channel C    |
-| Jumper = C     | Channel C      | Channel A   | Channel B    |
+This 2×2 jumper block allows manual swapping of **AY channels B and C** between:
 
-> Default jumper = B (Western demos)
-> Jumper = C (Eastern demos)
+- **CH_B** → Mixed (Left + Right)
+- **CH_C** → Right-only
+
+**CH_A is always fixed to Left-only.**
+
+---
+
+### 📐 Pinout Grid
+
+```
+╭────────────┬────────────╮
+│ [1] B_OUT  │ [2] CH_C   │
+├────────────┼────────────┤
+│ [3] CH_B   │ [4] C_OUT  │
+╰────────────┴────────────╯
+```
+
+---
+
+### 🔁 Jumper Combinations
+
+- **Vertical jumpers**  
+  - B_OUT → CH_B → Mixed (L+R)  
+  - C_OUT → CH_C → Right-only  
+
+- **Horizontal jumpers**  
+  - B_OUT → CH_C → Right-only  
+  - C_OUT → CH_B → Mixed (L+R)  
+
+---
+
+### 🧠 Notes
+
+- CH_A is always Left-only  
+- CH_B feeds Left + Right  
+- CH_C feeds Right-only
+
+> Vertical jumpers = B mixed, C right (Western demos)
+> Horizontal jumpers = C mixed, B right (Eastern demos)
