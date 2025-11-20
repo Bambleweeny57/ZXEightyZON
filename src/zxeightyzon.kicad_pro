@@ -52,7 +52,28 @@
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "silk_edge_clearance|244301000|50722001|0ebcf433-c198-4342-8388-ac649cfe2422|229be468-88ba-45fe-903b-a895de3995ca",
+          ""
+        ],
+        [
+          "silk_edge_clearance|244301000|50722001|0ebcf433-c198-4342-8388-ac649cfe2422|a53403d4-1d4c-46ec-9f24-0518344e8460",
+          ""
+        ],
+        [
+          "silk_edge_clearance|254000000|52881002|0ebcf433-c198-4342-8388-ac649cfe2422|14cea44b-a845-40e7-bad7-44a50a977c4b",
+          ""
+        ],
+        [
+          "silk_edge_clearance|254000000|65134998|0ebcf433-c198-4342-8388-ac649cfe2422|fad08776-a38f-419e-aa7f-64ca3fee8a4b",
+          ""
+        ],
+        [
+          "silk_over_copper|243904767|59363788|dc6d4ac9-e808-4906-a9b5-0a1db0d35bb3|00000000-0000-0000-0000-000000000000",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -550,6 +571,36 @@
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6
+      },
+      {
+        "clearance": 0.25,
+        "name": "AUDIO_GND",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.0,
+        "via_diameter": 0.8,
+        "via_drill": 0.4
+      },
+      {
+        "clearance": 0.25,
+        "name": "GND",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.0,
+        "via_diameter": 0.8,
+        "via_drill": 0.4
+      },
+      {
+        "clearance": 0.25,
+        "name": "VCC",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.0,
+        "via_diameter": 0.8,
+        "via_drill": 0.4
       }
     ],
     "meta": {
@@ -557,14 +608,27 @@
     },
     "net_colors": null,
     "netclass_assignments": null,
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "VCC",
+        "pattern": "VCC"
+      },
+      {
+        "netclass": "GND",
+        "pattern": "GND"
+      },
+      {
+        "netclass": "AUDIO_GND",
+        "pattern": "AUDIO_GND"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "",
-      "plot": "",
+      "netlist": "zxeightyzon.net",
+      "plot": "../fabfiles/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
@@ -673,7 +737,7 @@
     "meta": {
       "version": 1
     },
-    "net_format_name": "",
+    "net_format_name": "KiCad",
     "page_layout_descr_file": "",
     "plot_directory": "../pdf/",
     "space_save_all_events": true,
