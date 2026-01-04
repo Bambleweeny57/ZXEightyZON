@@ -18,9 +18,9 @@ PIN 6 = A4;             /* Present, ignored in decode to make compatable with al
 PIN 7 = A5;             /* Present, ignored in decode */ 
 PIN 8 = A6;             /* Present, ignored in decode */ 
 PIN 9 = A7;             /* A7: Latch=1 vs Write=0 */ 
-PIN 10 = !WR_N;         /* Active Low Write Name "WR" is true when pin is Low */ 
-PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ" is true when pin is Low */
-PIN 13 = RD_N;          /* Present, ignored in decode */ 
+PIN 10 = !WR_N;         /* Active Low Write Name "WR_N" is true when pin is Low */ 
+PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ_N" is true when pin is Low */
+PIN 13 = !RD_N;         /* Present, ignored in decode */ 
 
 /* Outputs */ 
 PIN 14 = BDIR;          /* YM2149 Pin 27 (Active High) */ 
@@ -34,15 +34,17 @@ PIN 17 = CLK_OUT;       /* 3.25MHz Pass through */
 VALID_IO = IORQ_N & WR_N & A0 & A1 & A2 & A3;
 
 /* YM2149 Bus Control (BDIR/BC1 are Active High) */ 
-BDIR = VALID_IO; 
-BC1 = VALID_IO & A7;
+BDIR = VALID_IO;
+BC1  = VALID_IO & A7;
 
 /* Clock logic: Pass through from Pin 1 */ 
 CLK_OUT = CLK_IN;
 
-/* Registered logic for Clock Divider */ 
-CLK_DIV2.D = !CLK_DIV2; /* No explicit .CLK is needed for Pin 1 on a 22V10, but good for clarity */
+/* Registered logic for Clock Divider */
+CLK_DIV2.D = !CLK_DIV2;
 
-/* Mandatory for GAL22V10: Enable the output buffers */ 
-/* This ensures the pins are not in a High-Z state */ 
-[BDIR, BC1, CLK_DIV2, CLK_OUT].OE = 'b'1;
+/* Output enables */
+CLK_DIV2.OE = 'b'1;
+BDIR.OE = 'b'1;
+BC1.OE = 'b'1;
+CLK_OUT.OE = 'b'1;

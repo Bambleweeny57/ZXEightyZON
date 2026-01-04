@@ -2,7 +2,7 @@
 #
 # CUPL(WM)        5.0a Serial# MW-10400000
 # Device          g22v10  Library DLIB-h-40-1
-# Created         Sun Jan 04 10:48:41 2026
+# Created         Sun Jan 04 15:39:09 2026
 # Name            ZXEightyZON
 # Partno          GAL22V10C
 # Revision        1.3
@@ -12,22 +12,22 @@
 # Assembly        ZXEightyZON
 # Location        U2
 #
-# Inputs  0 1 A0 A1 
-#         A2 A3 A4 A5 
-#         A6 A7 BC1 BDIR 
-#         CLK_DIV2 CLK_IN CLK_OUT !IORQ_N 
-#         RD_N !WR_N 
+# Inputs  1 A0 A1 A2 
+#         A3 A4 A5 A6 
+#         A7 BC1 BDIR CLK_DIV2 
+#         CLK_IN CLK_OUT !IORQ_N !RD_N 
+#         !WR_N 
 # Outputs BC1 BC1.oe BDIR BDIR.oe 
 #         CLK_DIV2.d CLK_DIV2.oe CLK_OUT CLK_OUT.oe 
-.i 18
+.i 17
 .o 8
 .p 8
---1111---1-----1-1 1~~~~~~~
-1----------------- ~1~~~~~~
---1111---------1-1 ~~1~~~~~
-1----------------- ~~~1~~~~
-------------0----- ~~~~1~~~
-1----------------- ~~~~~1~~
--------------1---- ~~~~~~1~
--1---------------- ~~~~~~~1
+-1111---1-----1-1 1~~~~~~~
+1---------------- ~1~~~~~~
+-1111---------1-1 ~~1~~~~~
+1---------------- ~~~1~~~~
+-----------0----- ~~~~1~~~
+1---------------- ~~~~~1~~
+------------1---- ~~~~~~1~
+1---------------- ~~~~~~~1
 .end
