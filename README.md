@@ -1,14 +1,15 @@
 # ZXEightyZON 🎶
 
-**ZXEightyZON** is a new sound interface for the ZX81, built around the **YM2149F** sound chip. Designed as a timing-accurate ZON-compatible sound card, this board offers clean integration with existing ZON-X81 demos and playback routines, while introducing flexible channel mixing options for stereo output.
+**ZXEightyZON** is a new sound interface for the ZX81, built around the **YM2149F** or **AY-3-8910** sound chips. 
+Designed as a timing-accurate ZON-compatible sound card, this board offers clean integration with existing ZON-X81 and ZON-X demos and playback routines, while introducing flexible channel mixing options for stereo output.
 
 ---
 
 ## 🔧 Key Features
 
-- **Sound Chip**: YM2149F (AY-3-8912 compatible, timing-accurate)
+- **Sound Chip**: YM2149F or AY-3-8910
 - **Address Decoding**:  
-  Explicit 8-bit address decoding via GAL logic, supporting all 4 ZON-X register and data address combinations:
+  Generic 8-bit address decoding via GAL logic, supporting all 4 known ZON-X register and data address combinations:
   - Latch: `0xDF`, Data: `0x0F` → Modified ZON-X  
   - Latch: `0xCF`, Data: `0x1F` → Original ZON-X  
   - Latch: `0xCF`, Data: `0x0F` → From ZON-X user manual  
@@ -27,11 +28,11 @@
 - **Master Clock Selection**:
   - Jumper-based selection for either bus clock or divided-by-2 clock
   - `CLK_OUT`: Buffered ZX81 bus clock (YM2149 SEL = GND)
-  - `CLK_DIV2`: Internally divided clock (YM2149 SEL = !GND)
+  - `CLK_DIV2`: Internally divided clock (YM2149 SEL = !GND or AY-3-8910)
 - **PSG Clock Divider Control**:
-  - Jumper-based selection for whether PSG divides master clock or receives pre-divided clock
-  - **Closed**: Connect YM2149 SEL to GND (PSG divides clock)
-  - **Open**: Disconnect SEL from GND (PSG uses divided clock)
+  - Jumper-based selection for whether PSG divides master clock (YM2149) or receives pre-divided clock
+  - **Closed**: Connect YM2149 SEL to GND (PSG divides clock - use with YM2149 only)
+  - **Open**: Disconnect SEL from GND (PSG uses divided clock - use with YM2149 or AY-3-8910)
 
 ---
 
@@ -48,43 +49,40 @@
 | 07  | A5         | Address bit 5                        |
 | 08  | A6         | Address bit 6                        |
 | 09  | A7         | Address bit 7                        |
-| 10  | WR_N       | Active-low write signal              |
-| 11  | IORQ_N     | Active-low I/O request               |
+| 10  | !WR_N      | Active-low write signal              |
+| 11  | !IORQ_N    | Active-low I/O request               |
 | 12  | GND        | Ground                               |
-| 13  | RD_N       | Active-low read signal               |
+| 13  | !RD_N      | Active-low read signal               |
 | 14  | BDIR       | PSG control: data direction          |
 | 15  | BC1        | PSG control: register/data select    |
 | 16  | CLK_DIV2   | Divided clock output (toggle logic)  |
 | 17  | CLK_OUT    | Clock Buffered passthrough           |
-| 18  | NC         | Not connected                        |
-| 19  | NC         | Not connected                        |
-| 20  | NC         | Not connected                        |
-| 21  | NC         | Not connected                        |
-| 22  | NC         | Not connected                        |
-| 23  | NC         | Not connected                        |
+| 18  | NC         | Not connected routed to header       |
+| 19  | NC         | Not connected routed to header       |
+| 20  | NC         | Not connected routed to header       |
+| 21  | NC         | Not connected routed to header       |
+| 22  | NC         | Not connected routed to header       |
+| 23  | NC         | Not connected routed to header       |
 | 24  | VCC        | Power                                |
 
 ---
 
 ### 🧮 ZXEightyZON Truth Table – ZON-X Address Variants vs PSG Control Signals
 
-This table maps decoded ZON-X addresses and I/O control signals to PSG control outputs. Each variant is listed explicitly to reflect all known ZON-X mappings.
+This table maps decoded ZON-X addresses and I/O control signals to PSG control outputs. 
+Each variant is listed explicitly to reflect all known ZON-X mappings.
 
-| Variant             | /IORQ | /WR  | /RD  | Address | Operation     | BDIR | BC1 |
-|---------------------|:-----:|:----:|:----:|:-------:|:--------------|:----:|:---:|
-| Modified ZON-X      | Low   | Low  | High | 0xDF    | Latch         | 1    | 1   |
-| Modified ZON-X      | Low   | Low  | High | 0x0F    | Data Write    | 1    | 0   |
-| Modified ZON-X      | Low   | High | Low  | 0x0F    | Data Read     | 0    | 1   |
-| Original ZON-X      | Low   | Low  | High | 0xCF    | Latch         | 1    | 1   |
-| Original ZON-X      | Low   | Low  | High | 0x1F    | Data Write    | 1    | 0   |
-| Original ZON-X      | Low   | High | Low  | 0x1F    | Data Read     | 0    | 1   |
-| Manual Override      | Low   | Low  | High | 0xCF    | Latch         | 1    | 1   |
-| Manual Override      | Low   | Low  | High | 0x0F    | Data Write    | 1    | 0   |
-| Manual Override      | Low   | High | Low  | 0x0F    | Data Read     | 0    | 1   |
-| AY-ZONIC Fallback   | Low   | Low  | High | 0xDF    | Latch         | 1    | 1   |
-| AY-ZONIC Fallback   | Low   | Low  | High | 0x1F    | Data Write    | 1    | 0   |
-| AY-ZONIC Fallback   | Low   | High | Low  | 0x1F    | Data Read     | 0    | 1   |
-| —                   | Any   | Any  | Any  | —       | No Operation  | 0    | 0   |
+| Variant                  | /IORQ | /WR  | Address | Operation     | BDIR | BC1 |
+|--------------------------|:-----:|:----:|:-------:|:--------------|:----:|:---:|
+| Modified ZON-X           | Low   | Low  | 0xDF    | Latch         | 1    | 1   |
+| Modified ZON-X           | Low   | Low  | 0x0F    | Data Write    | 1    | 0   |
+| Original ZON-X           | Low   | Low  | 0xCF    | Latch         | 1    | 1   |
+| Original ZON-X           | Low   | Low  | 0x1F    | Data Write    | 1    | 0   |
+| Manual Variant           | Low   | Low  | 0xCF    | Latch         | 1    | 1   |
+| Manual Variant           | Low   | Low  | 0x0F    | Data Write    | 1    | 0   |
+| Additional Combination   | Low   | Low  | 0xDF    | Latch         | 1    | 1   |
+| Additional Combination   | Low   | Low  | 0x1F    | Data Write    | 1    | 0   |
+| —                        | Any   | Any  | —       | No Operation  | 0    | 0   |
 
 **Notes:**
 - `BDIR` and `BC1` follow PSG truth table conventions for register and data access.

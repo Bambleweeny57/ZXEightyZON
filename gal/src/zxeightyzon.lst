@@ -3,63 +3,85 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 1
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Sun Jan 04 15:39:09 2026
+Created Sun Jan 04 19:12:01 2026
 
   1:Name ZXEightyZON; 
-  2:PartNo GAL22V10C; 
-  3:Date 22/10/2025; 
-  4:Revision 1.3; 
+  2:PartNo GAL22V10D; 
+  3:Date 04/01/2026; 
+  4:Revision 1.0; 
   5:Designer Bambleweeny57; 
   6:Company Submeson Brain Corporation; 
   7:Assembly ZXEightyZON; 
   8:Location U2; 
   9:Device g22v10;
  10:
- 11:/* Inputs */ 
- 12:PIN 1 = CLK_IN;         /* 3.25MHz Clock from ZX81 - Used as global Clock */ 
- 13:PIN 2 = A0; 
- 14:PIN 3 = A1; 
- 15:PIN 4 = A2; 
- 16:PIN 5 = A3; 
- 17:PIN 6 = A4;             /* Present, ignored in decode to make compatable with all decode addresses */ 
- 18:PIN 7 = A5;             /* Present, ignored in decode */ 
- 19:PIN 8 = A6;             /* Present, ignored in decode */ 
- 20:PIN 9 = A7;             /* A7: Latch=1 vs Write=0 */ 
- 21:PIN 10 = !WR_N;         /* Active Low Write Name "WR_N" is true when pin is Low */ 
- 22:PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ_N" is true when pin is Low */
- 23:PIN 13 = !RD_N;         /* Present, ignored in decode */ 
- 24:
- 25:/* Outputs */ 
- 26:PIN 14 = BDIR;          /* YM2149 Pin 27 (Active High) */ 
- 27:PIN 15 = BC1;           /* YM2149 Pin 29 (Active High) */ 
- 28:PIN 16 = CLK_DIV2;      /* ~1.625MHz Clock */ 
- 29:PIN 17 = CLK_OUT;       /* 3.25MHz Pass through */
- 30:
- 31:/* Logic Equations */
- 32:
- 33:/* Decoding: True when IORQ and WR are Low and A0 to A3 are High */ 
- 34:VALID_IO = IORQ_N & WR_N & A0 & A1 & A2 & A3;
+ 11:/* 
+ 12:    This CUPL is designed to be compatible with the origional ZON X 81 
+ 13:    and the ZX Spectrum compatible ZON X
+ 14:
+ 15:    Variant Name                Latch Address   Data Address
+ 16:    Modified ZON-X              0xDF            0x0F
+ 17:    Original ZON-X              0xCF            0x1F
+ 18:    Manual Variant              0xCF            0x0F
+ 19:    Additional Combination  0xDF                0x1F
+ 20:*/
+ 21:
+ 22:/*  Inputs */ 
+ 23:PIN 1 = CLK_IN;         /* 3.25MHz Clock from ZX81 - Used as global Clock */ 
+ 24:PIN 2 = A0;             /* A0 to A3 where the default ZON X 81 and ZON X address range */
+ 25:PIN 3 = A1; 
+ 26:PIN 4 = A2; 
+ 27:PIN 5 = A3; 
+ 28:PIN 6 = A4;             /* Present, ignored in decode to make compatible with all ZON addresses */ 
+ 29:PIN 7 = A5;             /* Present, ignored in decode. Added for future options */ 
+ 30:PIN 8 = A6;             /* Present, ignored in decode. Added for future options */ 
+ 31:PIN 9 = A7;             /* A7: Latch=1 vs Write=0 */ 
+ 32:PIN 10 = !WR_N;         /* Active Low Write Name "WR_N" is true when pin is Low */ 
+ 33:PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ_N" is true when pin is Low */
+ 34:PIN 13 = !RD_N;         /* Present, ignored in decode. Added for future options */ 
  35:
- 36:/* YM2149 Bus Control (BDIR/BC1 are Active High) */ 
- 37:BDIR = VALID_IO;
- 38:BC1  = VALID_IO & A7;
- 39:
- 40:/* Clock logic: Pass through from Pin 1 */ 
- 41:CLK_OUT = CLK_IN;
- 42:
- 43:/* Registered logic for Clock Divider */
- 44:CLK_DIV2.D = !CLK_DIV2;
- 45:
- 46:/* Output enables */
- 47:CLK_DIV2.OE = 'b'1;
- 48:BDIR.OE = 'b'1;
- 49:BC1.OE = 'b'1;
- 50:CLK_OUT.OE = 'b'1;
- 51:
+ 36:/*  Outputs */ 
+ 37:PIN 14 = BDIR;          /* YM2149 or AY-3-8910 Pin 27 (Active High) */ 
+ 38:PIN 15 = BC1;           /* YM2149 or AY-3-8910 Pin 29 (Active High) */ 
+ 39:PIN 16 = CLK_DIV2;      /* ~1.625MHz Clock for YM2149 or AY-3-8910 */ 
+ 40:PIN 17 = CLK_OUT;       /* ~3.25MHz Pass through for YM2149 with /SEL option to allow the VMC clock divider */
+ 41:
+ 42:/*  Logic Equations */
+ 43:
+ 44:/*  Decoding: True when IORQ and WR are Low and A0 to A3 are High
+ 45:    Ignoring A4 allows for ZON X and ZON X 81 address decoding
+ 46:    ZON X was A4 high to make it compatible with theh ZX Spectrum and Interface 1. ZON X 81 was A4 low */ 
+ 47:VALID_IO = IORQ_N & WR_N & A0 & A1 & A2 & A3;
+ 48:
+ 49:/*  YM2149 or AY-3-8910 Bus Control (BDIR/BC1 are Active High) */ 
+ 50:BDIR = VALID_IO;
+ 51:BC1  = VALID_IO & A7;
+ 52:
+ 53:/*  Clock logic: Pass through from Pin 1 for ~3.25MHz Pass through */ 
+
+LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 2
+
+CUPL(WM): Universal Compiler for Programmable Logic
+Version 5.0a Serial# MW-10400000
+Copyright (c) 1983, 1998 Logical Devices, Inc.
+Created Sun Jan 04 19:12:01 2026
+
+ 54:CLK_OUT = CLK_IN;
+ 55:
+ 56:/*  Registered logic for Clock Divider ~1.625MHz 50% of the duty cycle */
+ 57:CLK_DIV2.D = !CLK_DIV2;
+ 58:
+ 59:/*  Output enables
+ 60:    This to take the Outputs from their default Tristate */
+ 61:CLK_DIV2.OE = 'b'1;
+ 62:BDIR.OE = 'b'1;
+ 63:BC1.OE = 'b'1;
+ 64:CLK_OUT.OE = 'b'1;
+ 65:
 
 [0016cb] Please note: no expression assigned to:  CLK_DIV2.ar
 [0016cb] Please note: no expression assigned to:  CLK_DIV2.sp
 
 
 Jedec Fuse Checksum       (2ff4)
-Jedec Transmit Checksum   (ec2c)
+Jedec Transmit Checksum   (ec1e)
