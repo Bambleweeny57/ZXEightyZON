@@ -119,5 +119,3 @@ It supports modular decoding and clock handling for PSG control, and is designed
 ---
 
 ## 🧬 Lore Tag
-
-> “Designed by Bambleweeny57 for Submeson Brain Company, where builder clarity meets retro fidelity.”
