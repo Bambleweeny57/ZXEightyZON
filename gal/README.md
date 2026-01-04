@@ -140,3 +140,50 @@ This GAL logic is part of the **ZXEightyZON** sound interface, enabling compatib
 ## 🧬 Lore Tag
 
 > “Designed by Bambleweeny57 for Submeson Brain Company, where builder clarity meets retro fidelity.”
+
+
+/* Inputs */
+PIN 1  = CLK_IN;    /* 3.25MHz Clock from ZX81 - Used as global Clock */
+PIN 2  = A0;
+PIN 3  = A1;
+PIN 4  = A2;
+PIN 5  = A3;
+PIN 6  = A4;        
+PIN 7  = A5;        
+PIN 8  = A6;        
+PIN 9  = A7;        /* A7: Latch=1 vs Write=0 */
+PIN 10 = !WR;       /* Active Low Write - Name "WR" is true when pin is Low */
+PIN 11 = !IORQ;     /* Active Low I/O - Name "IORQ" is true when pin is Low */
+
+/* Outputs */
+PIN 14 = BDIR;      /* YM2149 Pin 27 (Active High) */
+PIN 15 = BC1;       /* YM2149 Pin 29 (Active High) */
+PIN 16 = CLK_DIV2;  /* ~1.625MHz Clock */
+PIN 17 = CLK_OUT;   /* 3.25MHz Pass-through */
+
+/* Internal Logic Variables */
+NODE VALID_IO; 
+
+/* Logic Equations */
+
+/* Decoding: True when IORQ and WR are Low and A0-A3 are High */
+VALID_IO = IORQ & WR & A0 & A1 & A2 & A3;
+
+/* YM2149 Bus Control (BDIR/BC1 are Active High) */
+BDIR = VALID_IO;
+BC1  = VALID_IO & A7;
+
+/* Clock logic: Pass-through from Pin 1 */
+CLK_OUT = CLK_IN;
+
+/* Registered logic for Clock Divider */
+CLK_DIV2.D = !CLK_DIV2;
+/* No explicit .CLK is needed for Pin 1 on a 22V10, but good for clarity */
+
+/* Mandatory for GAL22V10: Enable the output buffers */
+/* This ensures the pins are not in a High-Z state */
+[BDIR, BC1, CLK_DIV2, CLK_OUT].OE = 'b'1;
+
+
+
+
