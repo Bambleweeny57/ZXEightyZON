@@ -12,83 +12,40 @@ PIN  14 =  BDIR
 PIN  16 =  CLK_DIV2 
 PIN   1 =  CLK_IN 
 PIN  17 =  CLK_OUT 
-PIN  11 =  IORQ_N 
+PIN  11 = !IORQ_N 
 PIN  13 =  RD_N 
-PIN  10 =  WR_N 
+PIN  10 = !WR_N 
 %END
 
 %FIELD
 %END
 
 %EQUATION
-ADDR_DATA1 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
-
-ADDR_DATA2 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
-
-ADDR_DATA3 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
-
-ADDR_DATA4 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
-
-ADDR_LATCH1 =>
-    !A0 & !A1 & !A2 & A3 & A4 & !A5 & A6 & A7
-
-ADDR_LATCH2 =>
-    !A0 & !A1 & !A2 & A3 & !A4 & !A5 & A6 & A7
-
-ADDR_LATCH3 =>
-    !A0 & !A1 & !A2 & A3 & !A4 & !A5 & A6 & A7
-
-ADDR_LATCH4 =>
-    !A0 & !A1 & !A2 & A3 & A4 & !A5 & A6 & A7
-
-ADDR_READ1 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
-
-ADDR_READ2 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
-
-ADDR_READ3 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A6 & !A7
-
-ADDR_READ4 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & A6 & !A7
-
 BC1 =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & !RD_N & WR_N
-  # !A0 & !A1 & !A2 & A3 & !A5 & A6 & A7 & !IORQ_N & RD_N & !WR_N
+    A0 & A1 & A2 & A3 & A7 & !IORQ_N & !WR_N
+
+BC1.oe  =>
+    0 
 
 BDIR =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & RD_N & !WR_N
+    A0 & A1 & A2 & A3 & !IORQ_N & !WR_N
+
+BDIR.oe  =>
+    0 
 
 CLK_DIV2.d  =>
     CLK_DIV2
 
+CLK_DIV2.oe  =>
+    0 
+
 CLK_OUT =>
     CLK_IN
 
-data_io =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & RD_N & !WR_N
-
-latch_io =>
-    !A0 & !A1 & !A2 & A3 & !A5 & A6 & A7 & !IORQ_N & RD_N & !WR_N
-
-read_io =>
-    A0 & A1 & A2 & A3 & !A4 & !A5 & !A7 & !IORQ_N & !RD_N & WR_N
-
-BC1.oe  =>
-    1 
-
-BDIR.oe  =>
-    1 
-
-CLK_DIV2.oe  =>
-    1 
-
 CLK_OUT.oe  =>
     1 
+
+VALID_IO =>
+    A0 & A1 & A2 & A3 & IORQ_N & WR_N
 
 %END
