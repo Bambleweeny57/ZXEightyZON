@@ -1,120 +1,48 @@
-Name     ZXEightyZON;
-PartNo   GAL22V10C;
-Date     22/10/2025;
-Revision 1.0;
-Designer Bambleweeny57;
-Company  AY-ZONIC;
-Assembly ZXEightyZON;
-Location U2;
-Device   g22v10;
+Name ZXEightyZON; 
+PartNo GAL22V10C; 
+Date 22/10/2025; 
+Revision 1.3; 
+Designer Bambleweeny57; 
+Company Submeson Brain Corporation; 
+Assembly ZXEightyZON; 
+Location U2; 
+Device g22v10;
 
-/*
-   ZXEightyZON Truth Table ZON-X Address Variants vs PSG Control Signals
-   This table maps decoded ZON-X addresses and I/O control signals to
-   PSG control outputs BDIR and BC1. Each variant is listed explicitly
-   to reflect all known ZON-X mappings and ensure contributor clarity.
+/* Inputs */ 
+PIN 1 = CLK_IN;         /* 3.25MHz Clock from ZX81 - Used as global Clock */ 
+PIN 2 = A0; 
+PIN 3 = A1; 
+PIN 4 = A2; 
+PIN 5 = A3; 
+PIN 6 = A4;             /* Present, ignored in decode to make compatable with all decode addresses */ 
+PIN 7 = A5;             /* Present, ignored in decode */ 
+PIN 8 = A6;             /* Present, ignored in decode */ 
+PIN 9 = A7;             /* A7: Latch=1 vs Write=0 */ 
+PIN 10 = !WR_N;         /* Active Low Write Name "WR" is true when pin is Low */ 
+PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ" is true when pin is Low */
+PIN 13 = RD_N;          /* Present, ignored in decode */ 
 
-   Operation     Addr Match   Variant Type         BDIR  BC1
-   Latch         0xDF         Modified ZONX        1     1
-   Latch         0xCF         Original ZONX        1     1
-   Latch         0xCF         Manual Override      1     1
-   Latch         0xDF         AY-ZONIC Fallback    1     1
+/* Outputs */ 
+PIN 14 = BDIR;          /* YM2149 Pin 27 (Active High) */ 
+PIN 15 = BC1;           /* YM2149 Pin 29 (Active High) */ 
+PIN 16 = CLK_DIV2;      /* ~1.625MHz Clock */ 
+PIN 17 = CLK_OUT;       /* 3.25MHz Pass through */
 
-   Data Write    0x0F         Modified ZONX        1     0
-   Data Write    0x1F         Original ZONX        1     0
-   Data Write    0x0F         Manual Override      1     0
-   Data Write    0x1F         AY-ZONIC Fallback    1     0
+/* Logic Equations */
 
-   Data Read     0x0F         Modified ZONX        0     1
-   Data Read     0x1F         Original ZONX        0     1
-   Data Read     0x0F         Manual Override      0     1
-   Data Read     0x1F         AY-ZONIC Fallback    0     1
+/* Decoding: True when IORQ and WR are Low and A0 to A3 are High */ 
+VALID_IO = IORQ_N & WR_N & A0 & A1 & A2 & A3;
 
-   No Match      NA           NA                   0     0
+/* YM2149 Bus Control (BDIR/BC1 are Active High) */ 
+BDIR = VALID_IO; 
+BC1 = VALID_IO & A7;
 
-   Notes:
-   - BDIR and BC1 follow PSG truth table conventions.
-   - Address variants are duplicated intentionally to reflect ZON-X lineage.
-   - Control logic ensures compatibility with Sinclair-era demos and hardware.
-*/
-
-/* ---------- PIN DEFINITIONS ---------- */
-
-/* ---------- SIGNAL INPUTS ---------- */
-PIN 1  = CLK_IN;
-PIN 2  = A0;
-PIN 3  = A1;
-PIN 4  = A2;
-PIN 5  = A3;
-PIN 6  = A4;
-PIN 7  = A5;
-PIN 8  = A6;
-PIN 9  = A7;
-PIN 10 = WR_N;
-PIN 11 = IORQ_N;
-PIN 13 = RD_N;
-
-/* ---------- SIGNAL OUTPUTS ---------- */
-PIN 14 = BDIR;
-PIN 15 = BC1;
-
-/* ---------- CLOCK OUTPUTS ---------- */
-PIN 16 = CLK_DIV2;
-PIN 17 = CLK_OUT;
-
-/* ---------- ZONX ADDRESS DECODING ---------- */
-
-/* -------- REGISTER SELECT (LATCH) -------- */
-
-/* Modified ZONX latch */
-ADDR_LATCH1 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
-/* Original ZONX latch */
-ADDR_LATCH2 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
-/* Manual variant latch */
-ADDR_LATCH3 = A7 & A6 & !A5 & !A4 & A3 & !A2 & !A1 & !A0; // H'CF'
-/* Additional combination latch */
-ADDR_LATCH4 = A7 & A6 & !A5 & A4 & A3 & !A2 & !A1 & !A0;  // H'DF'
-
-latch_io = !IORQ_N & !WR_N & RD_N & (
-  ADDR_LATCH1 # ADDR_LATCH2 # ADDR_LATCH3 # ADDR_LATCH4
-);
-
-/* -------- DATA WRITE -------- */
-
-/* Modified ZONX data write */
-ADDR_DATA1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Original ZONX data write */
-ADDR_DATA2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-/* Manual variant data write */
-ADDR_DATA3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Additional combination data write */
-ADDR_DATA4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-
-data_io = !IORQ_N & !WR_N & RD_N & (
-  ADDR_DATA1 # ADDR_DATA2 # ADDR_DATA3 # ADDR_DATA4
-);
-
-/* -------- DATA READ -------- */
-
-/* Modified ZONX data read */
-ADDR_READ1 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Original ZONX data read */
-ADDR_READ2 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-/* Manual variant data read */
-ADDR_READ3 = !A7 & !A6 & !A5 & !A4 & A3 & A2 & A1 & A0;   // H'0F'
-/* Additional combination data read */
-ADDR_READ4 = !A7 & A6 & !A5 & !A4 & A3 & A2 & A1 & A0;    // H'1F'
-
-read_io = !IORQ_N & !RD_N & WR_N & (
-  ADDR_READ1 # ADDR_READ2 # ADDR_READ3 # ADDR_READ4
-);
-
-/* ---------- CONTROL SIGNALS ---------- */
-BDIR = data_io & !read_io;
-BC1 = latch_io # read_io;
-
-/* ---------- CLOCK DIVIDE-BY-2 ---------- */
-CLK_DIV2.D  = !CLK_DIV2;
-
-/* ---------- CLOCK PASS THROUGH ---------- */
+/* Clock logic: Pass through from Pin 1 */ 
 CLK_OUT = CLK_IN;
+
+/* Registered logic for Clock Divider */ 
+CLK_DIV2.D = !CLK_DIV2; /* No explicit .CLK is needed for Pin 1 on a 22V10, but good for clarity */
+
+/* Mandatory for GAL22V10: Enable the output buffers */ 
+/* This ensures the pins are not in a High-Z state */ 
+[BDIR, BC1, CLK_DIV2, CLK_OUT].OE = 'b'1;
