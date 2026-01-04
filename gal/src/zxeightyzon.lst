@@ -3,7 +3,7 @@ LISTING FOR LOGIC DESCRIPTION FILE: zxeightyzon.pld                  Page 1
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# MW-10400000
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Sun Jan 04 10:48:41 2026
+Created Sun Jan 04 15:39:09 2026
 
   1:Name ZXEightyZON; 
   2:PartNo GAL22V10C; 
@@ -25,9 +25,9 @@ Created Sun Jan 04 10:48:41 2026
  18:PIN 7 = A5;             /* Present, ignored in decode */ 
  19:PIN 8 = A6;             /* Present, ignored in decode */ 
  20:PIN 9 = A7;             /* A7: Latch=1 vs Write=0 */ 
- 21:PIN 10 = !WR_N;         /* Active Low Write Name "WR" is true when pin is Low */ 
- 22:PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ" is true when pin is Low */
- 23:PIN 13 = RD_N;          /* Present, ignored in decode */ 
+ 21:PIN 10 = !WR_N;         /* Active Low Write Name "WR_N" is true when pin is Low */ 
+ 22:PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ_N" is true when pin is Low */
+ 23:PIN 13 = !RD_N;         /* Present, ignored in decode */ 
  24:
  25:/* Outputs */ 
  26:PIN 14 = BDIR;          /* YM2149 Pin 27 (Active High) */ 
@@ -41,23 +41,25 @@ Created Sun Jan 04 10:48:41 2026
  34:VALID_IO = IORQ_N & WR_N & A0 & A1 & A2 & A3;
  35:
  36:/* YM2149 Bus Control (BDIR/BC1 are Active High) */ 
- 37:BDIR = VALID_IO; 
- 38:BC1 = VALID_IO & A7;
+ 37:BDIR = VALID_IO;
+ 38:BC1  = VALID_IO & A7;
  39:
  40:/* Clock logic: Pass through from Pin 1 */ 
  41:CLK_OUT = CLK_IN;
  42:
- 43:/* Registered logic for Clock Divider */ 
- 44:CLK_DIV2.D = !CLK_DIV2; /* No explicit .CLK is needed for Pin 1 on a 22V10, but good for clarity */
+ 43:/* Registered logic for Clock Divider */
+ 44:CLK_DIV2.D = !CLK_DIV2;
  45:
- 46:/* Mandatory for GAL22V10: Enable the output buffers */ 
- 47:/* This ensures the pins are not in a High-Z state */ 
- 48:[BDIR, BC1, CLK_DIV2, CLK_OUT].OE = 'b'1;
- 49:
+ 46:/* Output enables */
+ 47:CLK_DIV2.OE = 'b'1;
+ 48:BDIR.OE = 'b'1;
+ 49:BC1.OE = 'b'1;
+ 50:CLK_OUT.OE = 'b'1;
+ 51:
 
 [0016cb] Please note: no expression assigned to:  CLK_DIV2.ar
 [0016cb] Please note: no expression assigned to:  CLK_DIV2.sp
 
 
-Jedec Fuse Checksum       (1ff5)
-Jedec Transmit Checksum   (bd7c)
+Jedec Fuse Checksum       (2ff4)
+Jedec Transmit Checksum   (ec2c)
