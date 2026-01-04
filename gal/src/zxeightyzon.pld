@@ -18,9 +18,9 @@ PIN 6 = A4;             /* Present, ignored in decode to make compatable with al
 PIN 7 = A5;             /* Present, ignored in decode */ 
 PIN 8 = A6;             /* Present, ignored in decode */ 
 PIN 9 = A7;             /* A7: Latch=1 vs Write=0 */ 
-PIN 10 = !WR_N;         /* Active Low Write Name "WR" is true when pin is Low */ 
-PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ" is true when pin is Low */
-PIN 13 = RD_N;          /* Present, ignored in decode */ 
+PIN 10 = !WR_N;         /* Active Low Write Name "WR_N" is true when pin is Low */ 
+PIN 11 = !IORQ_N;       /* Active Low I/O Name "IORQ_N" is true when pin is Low */
+PIN 13 = !RD_N;          /* Present, ignored in decode */ 
 
 /* Outputs */ 
 PIN 14 = BDIR;          /* YM2149 Pin 27 (Active High) */ 
