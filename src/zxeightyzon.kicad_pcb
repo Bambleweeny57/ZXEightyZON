@@ -2122,8 +2122,8 @@
 		(at 63.3906 42.2586)
 		(descr "Through hole straight pin header, 2x02, 2.54mm pitch, double rows")
 		(tags "Through hole pin header THT 2x02 2.54mm double row")
-		(property "Reference" "J4"
-			(at 1.397 2.413 0)
+		(property "Reference" "ABC↓"
+			(at 1.1094 2.4914 0)
 			(layer "B.SilkS")
 			(uuid "97d54f5d-b82a-4ed3-96aa-956dd67ba48c")
 			(effects
@@ -2411,7 +2411,7 @@
 		(at 60.4442 75.9352 180)
 		(descr "Through hole straight pin header, 1x02, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x02 2.54mm single row")
-		(property "Reference" "JP1"
+		(property "Reference" "SEL"
 			(at 0 2.54 0)
 			(layer "B.SilkS")
 			(uuid "e39bbb14-e8af-4122-810c-6a4ba06d2eb3")
@@ -2670,8 +2670,8 @@
 		(at 90.6702 57.3932 90)
 		(descr "Through hole straight pin header, 1x10, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x10 2.54mm single row")
-		(property "Reference" "J2"
-			(at 2.413 0 0)
+		(property "Reference" "J2 I/O-B"
+			(at 2.3932 -2.4202 0)
 			(layer "B.SilkS")
 			(uuid "93187686-90b0-422f-b4c0-86a68fc66f9d")
 			(effects
@@ -3213,8 +3213,8 @@
 		(at 117.0862 57.3932 90)
 		(descr "Through hole straight pin header, 1x10, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x10 2.54mm single row")
-		(property "Reference" "J1"
-			(at 2.413 0 0)
+		(property "Reference" "J1 I/O-A"
+			(at 2.3932 -2.3362 0)
 			(layer "B.SilkS")
 			(uuid "cf91eb01-6d31-492a-a14f-d72219f4fb20")
 			(effects
@@ -7009,8 +7009,8 @@
 		(at 64.2542 57.3932 90)
 		(descr "Through hole straight pin header, 1x10, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x10 2.54mm single row")
-		(property "Reference" "J3"
-			(at 2.413 0 0)
+		(property "Reference" "J3 GAL"
+			(at 2.3932 -1.2542 0)
 			(layer "B.SilkS")
 			(uuid "7121e9bb-55e9-403d-9f94-cea11aa2744e")
 			(effects
@@ -8739,7 +8739,7 @@
 	(footprint "SBCLogo:SBCLogo"
 		(layer "B.Cu")
 		(uuid "f1262f2b-b5cc-40f0-809e-39e14cd4d042")
-		(at 49.7762 44.9472 180)
+		(at 45.25 42.75 180)
 		(property "Reference" "G***"
 			(at 0 0 0)
 			(layer "B.SilkS")
@@ -9881,7 +9881,7 @@
 		(at 56.7612 75.9352 180)
 		(descr "Through hole straight pin header, 1x03, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x03 2.54mm single row")
-		(property "Reference" "JP2"
+		(property "Reference" "CLK"
 			(at 0 2.54 0)
 			(layer "B.SilkS")
 			(uuid "4add1d0e-7c79-4484-81a1-d12cf9c91902")
@@ -10155,6 +10155,42 @@
 		(fill no)
 		(layer "Edge.Cuts")
 		(uuid "0ebcf433-c198-4342-8388-ac649cfe2422")
+	)
+	(gr_text "ACB→"
+		(at 66.25 37.75 0)
+		(layer "B.SilkS")
+		(uuid "09df102e-300b-483d-be7f-19c5372e902c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "CLK/2"
+		(at 58.25 84 0)
+		(layer "B.SilkS")
+		(uuid "37203040-5814-45e8-9f21-73b5e71d57b0")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "ZXEightyZON rev 1.0\nDesigned by Bambleweeny57\nfor Submeson Brain Corporation"
+		(at 67 52 0)
+		(layer "B.SilkS")
+		(uuid "81f2b687-1272-4f4f-8a30-fe4d65593956")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
 	)
 	(segment
 		(start 92.9816 49.6246)
