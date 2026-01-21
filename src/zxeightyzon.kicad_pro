@@ -554,7 +554,7 @@
       "plot": "../fabfiles/",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "../images/zxeightyzon.step",
       "svg": "",
       "vrml": ""
     },
